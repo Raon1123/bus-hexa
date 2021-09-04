@@ -10,6 +10,7 @@ params = {'stopid': '196040122',
           'numOfRows': '10',
           'serviceKey': key}
 
+print(url)
 response = requests.get(url, params=params)
 print(response.status_code)
 print(response.text)

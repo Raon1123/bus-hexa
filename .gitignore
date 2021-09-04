@@ -1,1 +1,6 @@
+# Hide API key
 key.txt
+
+# Hide virtualenv
+busenv/
+__pycache__/
