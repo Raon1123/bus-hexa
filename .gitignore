@@ -1,6 +1,11 @@
 # Hide API key
 key.txt
+*.xml
 
 # Hide virtualenv
 busenv/
 __pycache__/
+init.sh
+
+# Hide test
+test.py

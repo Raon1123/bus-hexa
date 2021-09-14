@@ -41,13 +41,10 @@ def request_time(route, day=0, page=1, row=10):
     # Check input data type
     if type(route) is not str:
         route = str(route)
-    
     if type(day) is not str:
         day = str(day)
-
     if type(page) is not str:
         page = str(page)
-
     if type(row) is not str:
         row = str(row)
 
@@ -79,9 +76,11 @@ def request_time(route, day=0, page=1, row=10):
     return xml
 
 
-def parse_xml(xml):
+def parse_time_xml(xml):
     js = xmltodict.parse(xml)
     js_dict = json.loads(json.dumps(js))
+
+    # Get parsed contents
     cnt = int(js_dict['tableInfo']['totalCnt'])
     info_dict = js_dict['tableInfo']['list']['row']
 
@@ -89,21 +88,24 @@ def parse_xml(xml):
 
 
 def crawl_time():
+    # Constants
     routes = [133, 733, 743]
+
     timetable = {}
+
+    # Error log file
     err_file = open(error_log_path, 'a')
 
     for route in routes:
-        row = 10
         page = 1
-
+        row = 10
         timetable[route] = {'1':[], '2':[]}
 
+        # For get every timetable, using iteration
         while True:
             try:
                 time_xml = request_time(route=route, page=page, row=row)
-
-                tot, info = parse_xml(time_xml)
+                tot, info = parse_time_xml(time_xml)
 
                 for r in info:
                     dir = r['DIRECTION']
@@ -111,18 +113,15 @@ def crawl_time():
                     timetable[route][dir].append(timestr)
 
                 page = page + 1
-                
-
             except Exception as e:
-                err_file.write("ERROR", e)
+                err_file.write(str(e))
                 break
-
+            
+            # If remain, continue
             if page * row < tot:
                 continue
-
             break
 
-    print(timetable)
     err_file.close()
 
 
