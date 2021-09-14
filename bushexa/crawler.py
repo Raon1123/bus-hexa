@@ -3,6 +3,14 @@ import xmltodict
 import json
 import time
 
+import os
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bushexa.settings")
+
+import django
+django.setup()
+
+from timetable.models import BusTimetable
+
 error_log_path = './log.txt'
 
 """
@@ -107,10 +115,16 @@ def crawl_time():
                 time_xml = request_time(route=route, page=page, row=row)
                 tot, info = parse_time_xml(time_xml)
 
+                # Iterate each timetable
                 for r in info:
-                    dir = r['DIRECTION']
-                    timestr = r['TIME']
-                    timetable[route][dir].append(timestr)
+                    bus_dir = r['DIRECTION']
+                    bus_time = r['TIME']
+
+                    # Add django table
+                    table = BusTimetable(bus_no=route,
+                                         bus_dir=bus_dir,
+                                         bus_time=bus_time)
+                    table.save()
 
                 page = page + 1
             except Exception as e:
