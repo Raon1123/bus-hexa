@@ -1,9 +1,32 @@
-{% if sample_list %}
-    <ul>
-    {% for sample in sample_list %}
-        <li><a href="/timetable/{{ sample.bus_no }}">{{ sample.bus_time }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No timetable.</p>
-{% endif %}
+{% load static %}
+<head>
+    
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+
+</head>
+
+<body>
+<div class="container my-3">
+    <table class="table">
+        <thead>
+            <tr class="table-dark">
+                <th>시간</th><th>버스번호</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if timeTable %}
+        {% for row in timeTable %}
+        <tr>
+            {% for item in row %}
+            <td>{{ item }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr><td colspan="2">시간표가 조회되지 않습니다.</td></tr>
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+</body>

@@ -12,27 +12,9 @@ django.setup()
 
 from timetable.models import BusTimetable
 
+from apitools import get_key
+
 error_log_path = './log.txt'
-
-"""
-API key를 읽는 함수
-
-Input
-- path: API key의 위치, 기본은 bushexa/crawler/key.txt
-
-Output
-- key: API key
-
-"""
-def get_key(path='./key.txt'):
-    key_file = open(path, 'r')
-
-    key = key_file.read()
-    key = requests.utils.unquote(key)
-
-    key_file.close()
-
-    return key
 
 
 """
@@ -61,7 +43,7 @@ def request_time(route, week=0, page=1, row=10):
     key = get_key()
 
     # Timetalbe URL
-    url = 'http://openapi.its.ulsan.kr/UlsanAPI/BusTimetable.xo'
+    url = "http://openapi.its.ulsan.kr/UlsanAPI/BusTimetable.xo"
 
     # API parameter
     params = {'serviceKey': key,
@@ -127,6 +109,7 @@ def iter_crawl_time(route, page, row, week):
         table.save()
     
     return total_cnt
+
 
 def crawl_time():
     # Constants

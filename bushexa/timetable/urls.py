@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('<int:request_id>/', views.tableshowid, name='showid'),
+    path('<str:request_time>/', views.timetableshow, name='timeshow'),
 ]
