@@ -5,7 +5,11 @@ from .models import BusTimetable
 
 # Create your views here.
 def index(request):
-    return HttpResponse("Hello Django")
+    sample_list = BusTimetable.objects.filter(bus_no=133, bus_week=0)[:5]
+    context = {
+        'sample_list': sample_list
+    }
+    return render(request, 'timetable/index.html', context)
 
 def tableshowid(request, request_id):
     response = "The time of request id %s."

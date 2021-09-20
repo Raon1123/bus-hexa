@@ -5,6 +5,8 @@ from django.db import models
 class BusTimetable(models.Model):
     bus_no = models.IntegerField(default=0)
     bus_dir = models.IntegerField(default=0)
+    bus_week = models.IntegerField(default=0)
+
     bus_time = models.CharField(max_length=4)
 
     def __str__(self):

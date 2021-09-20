@@ -1,0 +1,9 @@
+{% if sample_list %}
+    <ul>
+    {% for sample in sample_list %}
+        <li><a href="/timetable/{{ sample.bus_no }}">{{ sample.bus_time }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No timetable.</p>
+{% endif %}
