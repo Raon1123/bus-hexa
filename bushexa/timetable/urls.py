@@ -4,6 +4,7 @@ from . import views
 
 appname = 'timetable'
 urlpatterns = [
-    path('', views.timeshow, name='index'),
+    path('', views.index, name='index'),
+    path('departure/', views.timeshow, name='departure'),
     path('busno/', views.busnoshow, name='busno'),
 ]

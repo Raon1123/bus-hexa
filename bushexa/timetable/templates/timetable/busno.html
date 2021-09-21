@@ -6,27 +6,31 @@
 </head>
 
 <body>
-
 <div class="container">
-    <header class="d-flex justify-content-center py-3">
-    <ul class="nav nav-pills">
-        
-    </ul>
-    </header>
-</div>
-    
-<div class="container my-3">
 
-    {% if stop_name %}
-        <p> 정류소명: {{ stop_name }} </p>
-    {% else %}
-        <p> 정류소가 조회되지 않습니다. </p>
-    {% endif %}
+<nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">Bus HeXA</a>
+        </div>
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'busno' %}">버스 노선 기준</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'departure' %}">출발 시간 기준</a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
-</div>
+{% if stop_name %}
+    <p> 정류소명: {{ stop_name }} </p>
+{% else %}
+    <p> 정류소가 조회되지 않습니다. </p>
+{% endif %}
 
 <div class="row row-cols-2 row-cols-md-4 g-4">
-
     {% for bus in bus_info %}
     <div class="col">
     <div class="card">
@@ -41,11 +45,22 @@
             {% if info.bus_time %}
             <li class="list-group-item"> {{ info.bus_time }} 출발예정 </li>
             {% endif %}
+            {% if info.no_data %}
+            <li class="list-group-item"> 더이상 버스가 없습니다. </li>
+            {% endif %}
             {% endfor%}
         </ul>
+
     </div>
     </div>
     {% endfor %}
+</div>
+
+<nav class="navbar fixed-bottom navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="http://www.hexa.pro">Made by HeXA</a>
+    </div>
+</nav>
 
 </div>
 

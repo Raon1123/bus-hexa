@@ -120,12 +120,13 @@ def crawl_time():
     err_file = open(error_log_path, 'a')
 
     for route, week in list(product(*[routes, weeks])):
+        print("Route: "+ str(route) + " Week: " + str(week))
         page = 1 # DEFAULT setting of Ulsan BIS
         row = 10 # DEFAULT setting of Ulsan BIS
 
         # Delete Current Table
         if week is weeks[0]:
-            entries = BusTimetable.objects.filter(bus_no=route)
+            entries = BusTimetable.objects.filter(bus_no__exact=route)
             entries.delete()
 
         # For get every timetable, using iteration
@@ -135,7 +136,6 @@ def crawl_time():
                                             page=page,
                                             row=row,
                                             week=week)
-                page = page + 1
             # Fail API call
             except Exception as e:
                 err_file.write(str(e))
@@ -143,6 +143,7 @@ def crawl_time():
             
             # If remain, continue
             if page * row < total_cnt:
+                page = page + 1
                 continue
             break
 

@@ -6,22 +6,23 @@
 </head>
 
 <body>
-
-<nav class="navbar navbar-inverse navbar-fixed-top">
-<div class="container">
-    <div class="navbar-header">
-        <a class="navbar-brand">Bus HeXA</a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-            <li><a>출발 시간 기준 </a></li>
-            <li><a>버스 노선 기준 </a></li>
-        </ul>
-    </div>
-</div>
-</nav>
     
-<div class="container my-3">
+<div class="container">
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand">Bus HeXA</a>
+            </div>
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'busno' %}">버스 노선 기준</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'departure' %}">출발 시간 기준</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
     {% if request_time %}
         <p> 현재 시각: {{ request_time }} </p>
