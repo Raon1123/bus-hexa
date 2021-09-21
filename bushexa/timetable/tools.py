@@ -17,6 +17,11 @@ from apitools import get_key
 
 error_log_path = './log.txt'
 
+
+def get_busno(route_id):
+    return route_id[5:8]
+
+
 def request_arrival(stop_id, page=1, row=10):
     # Check input data type
     if type(stop_id) is not str:
@@ -76,6 +81,33 @@ def parse_arrival_xml(xml):
     return cnt, info_dict
 
 
+def get_337_dir(vehicle_no, remain_cnt):
+    ans = '3'
+
+    # 무동 정류장 기준
+    # 무동: 30434
+    # remain + 3
+    mudong_id = '196030434'
+
+    arrival_xml = request_arrival(stop_id=mudong_id, page=1, row=20)
+    _, info = parse_arrival_xml(arrival_xml)
+
+    for row in info:
+        mudong_vehicle_no = row['VEHICLENO']
+        mudong_stop_cnt = row['PREVSTOPCNT']
+        mudong_route_id = row['ROUTEID']
+
+        if get_busno(mudong_route_id) != '337':
+            continue
+        
+        if (mudong_vehicle_no == vehicle_no) and (int(mudong_stop_cnt) < 73):
+            ans = '2'
+        else:
+            ans = '1'
+
+    return ans
+
+
 def iter_crawl_arrival(stop_id, page, row):
     # Request XML
     arrival_xml = request_arrival(stop_id=stop_id, page=page, row=row)
@@ -84,15 +116,24 @@ def iter_crawl_arrival(stop_id, page, row):
     total_cnt, info = parse_arrival_xml(arrival_xml)
 
     # Iterate each row
-    for r in info:
-        print(r)
-        vehicle_no = r['VEHICLENO']
-        route_id = r['ROUTEID']
+    for row in info:
+        vehicle_no = row['VEHICLENO']
+        route_id = row['ROUTEID']
 
-        remain_time = r['ARRIVALTIME']
-        stop_cnt = r['PREVSTOPCNT']
-        stop_name = r['PRESENTSTOPNM']
+        remain_time = row['ARRIVALTIME']
+        stop_cnt = row['PREVSTOPCNT']
+        stop_name = row['PRESENTSTOPNM']
 
+        if get_busno(route_id) == '337':
+            dir = get_337_dir(vehicle_no, stop_cnt)
+            route_id = route_id[:-1] + dir
+            
+            filter337 = ArrivalInfo.objects.filter(vehicle_no__exact=vehicle_no,
+                                                   stop_cnt__exact=stop_cnt)
+            
+            if len(filter337) != 0:
+                continue
+            
         table = ArrivalInfo(stop_id=stop_id,
                             vehicle_no=vehicle_no,
                             route_id=route_id,

@@ -12,12 +12,22 @@ from pytz import timezone, utc
 5: 방학 일요일/공휴일
 """
 def get_week():
-    weekday = datetime.now(timezone('Asia/Seoul')).weekday()
+    special_day = ['0921', '0922']
+    now = datetime.now(timezone('Asia/Seoul'))
+
+    weekday = now.weekday()
     if weekday < 5:
         week = 0
     elif weekday == 6:
         week = 1
     else:
+        week = 2
+
+    month = now.month
+    day = now.day
+    date = str(month).zfill(2) + str(day).zfill(2)
+
+    if date in special_day:
         week = 2
 
     return week
@@ -67,7 +77,7 @@ def get_bus_list(key='196040234'):
         key = str(key)
 
     bus_dict = {'196040234':[
-        ['133','2'],['733','2'],['743','2'],['304','1'],['304','2'],['233','3'],['337','3']
+        ['133','2'],['733','2'],['743','2'],['304','1'],['304','2'],['233','3'],['337','1'],['337','2']
     ]}
 
     if key in bus_dict.keys():
@@ -85,7 +95,7 @@ def get_bus_dir(bus_no, dir):
     dir_dict = {'133':{'1': '울산과학기술원 방면', '2': '꽃바위 방면'},
                 '233':{'3': '농소차고지 방면'},
                 '304':{'1': '율리 방면', '2': '복합웰컴센터 방면'},
-                '337':{'3': '삼남 순환'},
+                '337':{'1': '태화강역 방면', '2': '울산역 경유, 삼남신화 방면', '3': '삼남 순환'},
                 '733':{'1': '울산과학기술원 방면', '2': '덕하차고지 방면'},
                 '743':{'1': '울산과학기술원 방면', '2': '태화강역 방면'}}
     

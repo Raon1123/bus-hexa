@@ -6,6 +6,7 @@ from .models import ArrivalInfo, BusTimetable
 from .consts import *
 from .tools import *
 
+
 """
 시간 순으로 버스 목록 표출
 """
@@ -39,6 +40,8 @@ def get_bus_arrivaltime(bus_no, dir):
 
     stop_info = []
 
+    key = bus_no + '(' + get_bus_dir(bus_no, dir) +')'
+
     # 도착정보 탐색
     route_id = '19610' + bus_no + dir
     arrival = ArrivalInfo.objects.filter(route_id__exact=route_id)
@@ -49,6 +52,9 @@ def get_bus_arrivaltime(bus_no, dir):
             'stop_name': info.stop_name
         }
         stop_info.append(info_dict)
+
+    if bus_no is '337':
+        dir = '3'
 
     # 출발정보 탐색
     times = BusTimetable.objects.filter(bus_no__exact=bus_no,
@@ -65,8 +71,6 @@ def get_bus_arrivaltime(bus_no, dir):
 
     while len(stop_info) < 2:
         stop_info.append({"no_data": "No_data"})
-
-    key = bus_no + '(' + get_bus_dir(bus_no, dir) +')'
     
     stop_dict = {
         'bus_name': key,
