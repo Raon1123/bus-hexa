@@ -1,32 +1,64 @@
 {% load static %}
 <head>
-    
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-
+    <title>Bus HeXA 실험실</title>
 </head>
 
 <body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+<div class="container">
+    <div class="navbar-header">
+        <a class="navbar-brand">Bus HeXA</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li><a>출발 시간 기준 </a></li>
+            <li><a>버스 노선 기준 </a></li>
+        </ul>
+    </div>
+</div>
+</nav>
+    
 <div class="container my-3">
+
+    {% if request_time %}
+        <p> 현재 시각: {{ request_time }} </p>
+    {% else %}
+        <p> 시간이 조회되지 않습니다. </p>
+    {% endif %}
+
     <table class="table">
         <thead>
             <tr class="table-dark">
-                <th>시간</th><th>버스번호</th>
+                <th>시간</th>
+                <th>버스번호</th>
+                <th>노선방면</th>
+                <th>노선경유</th>
             </tr>
         </thead>
         <tbody>
-        {% if timeTable %}
-        {% for row in timeTable %}
+        {% if time_table %}
+
+        {% for row in time_table %}
         <tr>
-            {% for item in row %}
-            <td>{{ item }}</td>
-            {% endfor %}
+            <td>{{ row.bus_time }}</td>
+            <td>{{ row.bus_no }}</td>
+            <td>{{ row.bus_dir }}</td>
+            <td>{{ row.bus_via }}</td>
         </tr>
         {% endfor %}
+
         {% else %}
-        <tr><td colspan="2">시간표가 조회되지 않습니다.</td></tr>
+        <tr>
+            <td colspan="4">시간표가 조회되지 않습니다.</td>
+        </tr>
         {% endif %}
+
         </tbody>
     </table>
+
 </div>
+{% csrf_token %}
 </body>

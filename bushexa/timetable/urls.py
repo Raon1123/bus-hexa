@@ -2,7 +2,8 @@ from django.urls import path
 
 from . import views
 
+appname = 'timetable'
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('<str:request_time>/', views.timetableshow, name='timeshow'),
+    path('', views.timeshow, name='index'),
+    path('busno/', views.busnoshow, name='busno'),
 ]

@@ -113,7 +113,7 @@ def iter_crawl_time(route, page, row, week):
 
 def crawl_time():
     # Constants
-    routes = [133, 733, 743]
+    routes = [133, 733, 743, 304, 233, 337]
     weeks = [0, 1, 2, 3, 4, 5]
 
     # Error log file

@@ -1,0 +1,54 @@
+{% load static %}
+{% load timetable_extras %}
+<head>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+
+<body>
+
+<div class="container">
+    <header class="d-flex justify-content-center py-3">
+    <ul class="nav nav-pills">
+        
+    </ul>
+    </header>
+</div>
+    
+<div class="container my-3">
+
+    {% if stop_name %}
+        <p> 정류소명: {{ stop_name }} </p>
+    {% else %}
+        <p> 정류소가 조회되지 않습니다. </p>
+    {% endif %}
+
+</div>
+
+<div class="row row-cols-2 row-cols-md-4 g-4">
+
+    {% for bus in bus_info %}
+    <div class="col">
+    <div class="card">
+        <div class="card-header">{{ bus.bus_name }}</div>
+
+        <ul class="list-group list-group-flush">
+            {% for info in bus.stop_info %}
+            {% if info.remain_time %}
+            <li class="list-group-item"> 남은시간: {{ info.remain_time }} ({{ info.stop_name }})</li>
+            {% endif %}
+
+            {% if info.bus_time %}
+            <li class="list-group-item"> {{ info.bus_time }} 출발예정 </li>
+            {% endif %}
+            {% endfor%}
+        </ul>
+    </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% csrf_token %}
+
+</body>
