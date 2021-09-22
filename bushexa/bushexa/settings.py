@@ -21,12 +21,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n(ylj62rbn_c*vr@z5mr1834ln+rg3$uo57uetb&qvszgdz-b@'
+secret_path = '/home/bus/bus_hexa/bushexa/bushexa/secret_key.txt'
+with open(secret_path) as f
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['t.hexa.pro',
+                 'bus.hexa.pro']
 
 
 # Application definition

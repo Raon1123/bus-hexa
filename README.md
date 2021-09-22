@@ -5,6 +5,18 @@
 [울산 API](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15052669)
 API Key를 `./bushexa/crawler/key.txt`에 넣으세요.
 
+# 들어가기
+
+[MDN 장고 소개](https://developer.mozilla.org/ko/docs/Learn/Server-side/Django/development_environment)
+
+가상환경의 경우 `requirements.txt`에 적혀있습니다.
+가상환경을 활성화 한 후 아래 명령을 실행하여서 필요한 모듈을 다운받아야 합니다.
+```bash
+pip3 install -r requirements.txt
+```
+
+[배포 참고 자료](https://wikidocs.net/6611)
+
 # Bus Information
 
 | 출발 정류장명 | 버스번호 | 방향번호 | 방면 | Route ID |

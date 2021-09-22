@@ -9,3 +9,6 @@ init.sh
 
 # Hide test
 test.py
+
+# Hide Secret Key
+secret_key.txt

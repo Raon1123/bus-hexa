@@ -10,4 +10,5 @@ soupsieve==2.2.1
 sqlparse==0.4.2
 typing-extensions==3.10.0.2
 urllib3==1.26.6
+uWSGI==2.0.19.1
 xmltodict==0.12.0
