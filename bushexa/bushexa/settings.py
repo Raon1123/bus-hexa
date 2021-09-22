@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 secret_path = '/home/bus/bus_hexa/bushexa/bushexa/secret_key.txt'
-with open(secret_path) as f
+with open(secret_path) as f:
     SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
