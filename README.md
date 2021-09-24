@@ -1,7 +1,5 @@
 # bus-hexa
 
-
-
 # Update Log
 
 # 들어가기
@@ -55,7 +53,13 @@ Windows VS Code를 통해 진행된다면 표시되는 주소를 `Ctrl`키와 �
 
 실행 중 오류의 경우 `log.txt`에 남게 됩니다.
 
+## 배포하기에 앞서
+
 [배포 참고 자료](https://wikidocs.net/6611)
+
+`./bushexa/bushexa/settings.py`에 **반드시** `DEBUG = False`를 확인하시오.
+
+[임시적인 배포 주소](http://t.hexa.pro:8014)
 
 # Bus Information
 
