@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-secret_path = '/home/bus/bus_hexa/bushexa/bushexa/secret_key.txt'
+secret_path = os.path.join(BASE_DIR,'bushexa/secret_key.txt')
 with open(secret_path) as f:
     SECRET_KEY = f.read().strip()
 

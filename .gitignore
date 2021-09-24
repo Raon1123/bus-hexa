@@ -5,6 +5,7 @@ key.txt
 # Hide virtualenv
 busenv/
 __pycache__/
+*.py[cod]
 init.sh
 
 # Hide test
@@ -12,3 +13,6 @@ test.py
 
 # Hide Secret Key
 secret_key.txt
+
+# Hide DB
+db.sqlite3
