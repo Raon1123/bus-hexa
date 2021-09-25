@@ -56,6 +56,14 @@ def get_stop_list():
     return stops
 
 
+"""
+stop_id 별 정류소 명을 직접 반환하는 함수
+
+Input
+- stop_id: 탐색할 정류소 ID
+Output
+- ans: 정류소 이름, 탐색에 실패 시 "잘못된 접근"
+"""
 def get_stop_string(stop_id='196040234'):
     id_dict = {
         '196040234': '울산과학기술원'
@@ -123,14 +131,4 @@ def get_bus_via(bus_no, dir):
     else:
         ans = "잘못된 조회입니다."
 
-    return ans
-
-
-def get_stop_via(stop_id='196040234'):
-    stop_via_dict = {'196040234': [
-        1
-    ]}
-
-    ans = {}
-    
     return ans

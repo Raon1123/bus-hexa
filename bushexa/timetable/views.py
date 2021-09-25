@@ -9,8 +9,15 @@ from .tools import *
 
 """
 시간 순으로 버스 목록 표출
+
+Input
+- request_time: 요청 시간을 string 형태로 표현 예) 0912
+
+Output
+- bus_time: `request_time` 이후의 모든 버스의 시간표를 dict 형태로 반환
 """
 def get_bustime(request_time):
+    # Type check
     if type(request_time) is not str:
         request_time = str(request_time)
 
@@ -56,7 +63,7 @@ def get_bus_arrivaltime(bus_no, dir):
     if bus_no is '337':
         dir = '3'
 
-    # 출발정보 탐색
+    # 종점에서의 출발정보 탐색
     times = BusTimetable.objects.filter(bus_no__exact=bus_no,
                                         bus_dir__exact=dir,
                                         bus_week=week,
@@ -118,7 +125,7 @@ def timeshow(request):
 def busnoshow(request):
     stop_id = '196040234'
 
-    crawl_arrival()
+    crawl_arrival() # 추후 API에 직접 요청하는 부분을 삭제할것 **FIXIT**
 
     bus_info = get_busstop_time(stop_id)
 
@@ -130,7 +137,6 @@ def busnoshow(request):
     }
 
     return render(request, 'timetable/busno.html', context)    
-    # return JsonResponse(context)
 
 
 def index(request):

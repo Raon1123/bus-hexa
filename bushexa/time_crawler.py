@@ -20,8 +20,9 @@ Ulsan API에게 출발시간 정보를 요청하는 부분
 
 Input
 - route: 버스번호 eg) 133, 233
-- day: 요일구분, 0-평일, 1-토요일, 2-주말,공휴일, 3-방학평일, 4-방학토요일, 5-방학일요일
+- week: 요일구분, 0-평일, 1-토요일, 2-주말,공휴일, 3-방학평일, 4-방학토요일, 5-방학일요일
 - page: 요청 페이지
+- row: 요청 행의 수
 
 Output
 - xml: 받은 xml 형식의 파일
@@ -68,12 +69,18 @@ def request_time(route, week=0, page=1, row=10):
 
 """
 시간표 Crawling의 한 iteration
+1. API에 시간표를 요청한다.
+2. XML형태의 값을 파싱한다
+3. 파싱한 시간표를 DB에 저장한다.
 
 Input
 - route: 버스 노선 번호
 - page: 요청 페이지 (기본: 1)
 - row: 요청할 행의 갯수
-- week: 주차
+- week: 요청 주차
+
+Output
+- total_cnt: API에 있는 총 행의 갯수
 """
 def iter_crawl_time(route, page=1, row=10, week=0):
     # Request XML
