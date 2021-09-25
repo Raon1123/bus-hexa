@@ -16,3 +16,11 @@ secret_key.txt
 
 # Hide DB
 db.sqlite3
+
+# Virtualenv files
+bin
+lib
+pyvenv.cfg
+
+# static files
+static
