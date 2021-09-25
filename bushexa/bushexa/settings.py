@@ -29,7 +29,8 @@ with open(secret_path) as f:
 DEBUG = True
 
 ALLOWED_HOSTS = ['t.hexa.pro',
-                 'bus.hexa.pro']
+                 'bus.hexa.pro',
+                 'localhost']
 
 
 # Application definition
