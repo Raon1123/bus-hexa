@@ -4,17 +4,11 @@ import json
 import time
 from itertools import product
 
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-
-import django
-django.setup()
-
 from timetable.models import BusTimetable
 
-from bushexa.api.apitools import get_key
-
-error_log_path = './log.txt'
+from .apitools import get_key
+from .consts import error_log_path
+import traceback
 
 
 """
@@ -56,7 +50,7 @@ def request_time(route, week=0, page=1, row=10):
     response = requests.get(url, params=params)
     
     # Fail timetable request
-    if response.status_code is not 200:
+    if response.status_code != 200:
         time_msg = time.strftime('%Y-%m-%d %I:%M:%S %p', time.localtime())
         msg = "Fail Time Request!\n route:" + route + \
                 " day: " + day + "TIME: " + time_msg + '\n'
@@ -137,8 +131,9 @@ def crawl_time():
                                             row=row,
                                             week=week)
             # Fail API call
-            except Exception as e:
-                err_file.write(str(e))
+            except Exception:
+                err_file.write('\n\n')
+                err_file.write(str(traceback.format_exc()))
                 break
             
             # If remain, continue
@@ -149,6 +144,3 @@ def crawl_time():
 
     err_file.close()
 
-
-if __name__=='__main__':
-    crawl_time()

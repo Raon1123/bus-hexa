@@ -17,6 +17,9 @@ secret_key.txt
 # Hide DB
 db.sqlite3
 
+# Hide log
+log.txt
+
 # Virtualenv files
 bin
 lib

@@ -1,4 +1,4 @@
-from bushexa.timetable.models import ArrivalInfo, BusTimetable
+from timetable.models import ArrivalInfo, BusTimetable
 
 from .consts import *
 from .tools import *
@@ -50,7 +50,7 @@ def get_bus_arrivaltime(bus_no, dir):
         }
         stop_info.append(info_dict)
 
-    if bus_no is '337':
+    if bus_no == '337':
         dir = '3'
 
     # 출발정보 탐색

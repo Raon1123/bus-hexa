@@ -1,4 +1,7 @@
 import requests
+import os
+
+default_key_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'key.txt')
 
 """
 API key를 읽는 함수
@@ -10,7 +13,8 @@ Output
 - key: API key
 
 """
-def get_key(path='./key.txt'):
+
+def get_key(path=default_key_path):
     key_file = open(path, 'r')
 
     key = key_file.read()

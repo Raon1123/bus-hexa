@@ -1,21 +1,14 @@
-from bushexa.timetable.consts import get_stop_list
+from timetable.tools.consts import get_stop_list
 import requests
 import xmltodict
 import json
 import time
-from itertools import product
-
-import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-
-import django
-django.setup()
+import traceback
 
 from timetable.models import ArrivalInfo
 
-from bushexa.api.apitools import get_key
-
-error_log_path = './log.txt'
+from .apitools import get_key
+from .consts import error_log_path
 
 def request_arrival(stop_id, page=1, row=10):
     # Check input data type
@@ -42,7 +35,7 @@ def request_arrival(stop_id, page=1, row=10):
     response = requests.get(url, params=params)
     
     # Fail timetable request
-    if response.status_code is not 200:
+    if response.status_code != 200:
         time_msg = time.strftime('%Y-%m-%d %I:%M:%S %p', time.localtime())
         msg = "Fail Arrival Request!\n route:" + stop_id + \
               "TIME: " + time_msg + '\n'
@@ -111,6 +104,7 @@ def crawl_arrival():
     err_file = open(error_log_path, 'a')
 
     for stop in stops:
+        print("Stop: %s" % stop)
         page = 1
         row = 10
 
@@ -125,7 +119,8 @@ def crawl_arrival():
                                                row=row)
                 page += 1
             except Exception as e:
-                err_file.write(str(e))
+                err_file.write('\n\n')
+                err_file.write(str(traceback.format_exc()))
                 break
 
             if page * row < total_cnt:
@@ -134,6 +129,3 @@ def crawl_arrival():
 
     err_file.close()
 
-
-if __name__=='__main__':
-    crawl_arrival()

@@ -12,7 +12,7 @@ django.setup()
 
 from timetable.models import ArrivalInfo
 
-from bushexa.api.apitools import get_key
+from crawler.apitools import get_key
 
 error_log_path = './log.txt'
 
