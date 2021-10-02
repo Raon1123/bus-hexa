@@ -1,6 +1,11 @@
 # Hide API key
 key.txt
 *.xml
+backupkey.txt
+
+# Hide api testers
+apicheck.py
+2picheck.py
 
 # Hide virtualenv
 busenv/
