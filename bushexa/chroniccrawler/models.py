@@ -23,3 +23,6 @@ class PosOfBus(models.Model):
     node_id = models.CharField(max_length=20)
     bus_num = models.CharField(max_length=20)
     node_order = models.IntegerField()
+
+    def __str__(self):
+        return "lane " + self.route_key.bus_name + " : " + self.bus_num + " on node " + str(self.node_order)

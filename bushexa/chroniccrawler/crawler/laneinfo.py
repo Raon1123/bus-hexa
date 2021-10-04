@@ -48,9 +48,18 @@ def store_lane_info(lane, resdict):
     # for thing in resdict[response][body][items][item] => each node of lane
         
     # Create object of model nodeoflane and save it to database(possibly replacing existing ones)
-    original_nodes = NodeOfLane.objects.filter(route_key=lane).order_by('node_order')
-    new_nodes = resdict['response']['body']['items']['item']
 
+
+
+    if resdict['response']['body']['totalCount'] == '0':
+        NodeOfLane.objects.filter(route_key=lane).delete()
+        return
+    elif resdict['response']['body']['totalCount'] == '1':
+        new_nodes = [resdict['response']['body']['items']['item']]
+    else:
+        new_nodes = resdict['response']['body']['items']['item']    
+
+    original_nodes = NodeOfLane.objects.filter(route_key=lane).order_by('node_order')
     are_the_two_different = False
     if len(original_nodes) != len(new_nodes):
         are_the_two_different = True
