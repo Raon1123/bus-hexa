@@ -29,12 +29,25 @@ LaneToTrack 데이터베이스에 저장해 "국토교통부_버스노선정보"
 
 밑의 과정의 명령은 모두 manage.py가 존재하는 폴더에서 실행하게 됩니다.
 
-### 0. DB 생성을 위해 migration 하기
+### 0. celery 메세지 브로커 rabbitmq 설치 및 DB 생성을 위해 migration 하기
 
 chroniccrawler는 django의 db를 활용합니다. 데이터베이스를 migrate 해주세요.
 
 ```bash
 python3 manage.py migrate
+```
+
+celery를 사용하기 위해서는 메세지 브로커가 필요합니다.
+우리는 그중 rabbitMQ를 사용하도록 하겠습니다.
+
+```bash
+sudo apt install rabbitmq-server
+```
+
+설치 후 rabbitmq 서비스가 돌아가는지 확인해주세요.
+
+```bash
+sudo rabbitmq-server
 ```
 
 ### 1. 노선 정보를 가져올 노선 등록하기
