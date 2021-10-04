@@ -26,7 +26,7 @@ def timeshow(request):
 def busnoshow(request):
     stop_id = '196040234'
 
-    crawl_arrival()
+    crawl_arrival() # 추후 API에 직접 요청하는 부분을 삭제할것 **FIXIT**
 
     bus_info = get_busstop_time(stop_id)
 
@@ -38,7 +38,6 @@ def busnoshow(request):
     }
 
     return render(request, 'timetable/busno.html', context)    
-    # return JsonResponse(context)
 
 
 def index(request):

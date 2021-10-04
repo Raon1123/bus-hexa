@@ -1,7 +1,5 @@
 from timetable.tools.consts import get_stop_list
 import requests
-import xmltodict
-import json
 import time
 import traceback
 
@@ -47,34 +45,12 @@ def request_arrival(stop_id, page=1, row=10):
     return xml
 
 
-"""
-울산 버스 API로 부터 받은 json 파일 파싱
-Input
-- xml: API로 부터 받은 xml 파일
-
-Output
-- cnt: 조회된 총 timetable의 개수
-- info_dict: 각 row를 dictonary를 가진 list 형태로 파싱
-
-"""
-def parse_arrival_xml(xml):
-    # JSON parser
-    js = xmltodict.parse(xml)
-    js_dict = json.loads(json.dumps(js))
-
-    # Get parsed contents
-    cnt = int(js_dict['tableInfo']['totalCnt'])
-    info_dict = js_dict['tableInfo']['list']['row']
-
-    return cnt, info_dict
-
-
 def iter_crawl_arrival(stop_id, page, row):
     # Request XML
     arrival_xml = request_arrival(stop_id=stop_id, page=page, row=row)
 
     # Parse XML
-    total_cnt, info = parse_arrival_xml(arrival_xml)
+    total_cnt, info = parse_xml(arrival_xml)
 
     # Iterate each row
     for r in info:

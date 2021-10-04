@@ -1,6 +1,5 @@
 import requests
-import xmltodict
-import json
+
 import time
 from itertools import product
 
@@ -10,14 +9,14 @@ from .apitools import get_key
 from .consts import error_log_path
 import traceback
 
-
 """
 Ulsan API에게 출발시간 정보를 요청하는 부분
 
 Input
 - route: 버스번호 eg) 133, 233
-- day: 요일구분, 0-평일, 1-토요일, 2-주말,공휴일, 3-방학평일, 4-방학토요일, 5-방학일요일
+- week: 요일구분, 0-평일, 1-토요일, 2-주말,공휴일, 3-방학평일, 4-방학토요일, 5-방학일요일
 - page: 요청 페이지
+- row: 요청 행의 수
 
 Output
 - xml: 받은 xml 형식의 파일
@@ -61,34 +60,28 @@ def request_time(route, week=0, page=1, row=10):
 
     return xml
 
+
 """
-울산 버스 API로 부터 받은 json 파일 파싱
+시간표 Crawling의 한 iteration
+1. API에 시간표를 요청한다.
+2. XML형태의 값을 파싱한다
+3. 파싱한 시간표를 DB에 저장한다.
+
 Input
-- xml: API로 부터 받은 xml 파일
+- route: 버스 노선 번호
+- page: 요청 페이지 (기본: 1)
+- row: 요청할 행의 갯수
+- week: 요청 주차
 
 Output
-- cnt: 조회된 총 timetable의 개수
-- info_dict: 각 row를 dictonary를 가진 list 형태로 파싱
-
+- total_cnt: API에 있는 총 행의 갯수
 """
-def parse_time_xml(xml):
-    # JSON parser
-    js = xmltodict.parse(xml)
-    js_dict = json.loads(json.dumps(js))
-
-    # Get parsed contents
-    cnt = int(js_dict['tableInfo']['totalCnt'])
-    info_dict = js_dict['tableInfo']['list']['row']
-
-    return cnt, info_dict
-
-
-def iter_crawl_time(route, page, row, week):
+def iter_crawl_time(route, page=1, row=10, week=0):
     # Request XML
     time_xml = request_time(route=route, page=page, row=row, week=week)
 
     # Parse XML
-    total_cnt, info = parse_time_xml(time_xml)
+    total_cnt, info = parse_xml(time_xml)
 
     # Iterate each timetable
     for r in info:
