@@ -5,8 +5,11 @@
 ## 시작하기에 앞서
 
 ChronicCrawler는 공공 데이터포털에 공개된 아래 오픈API들을 기반으로 하고 있습니다.
+
 [국토교통부_버스노선정보](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000758)
+
 [국토교통부_버스위치정보](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000515)
+
 API Key를 `(앱 위치)/crawler/key.txt`에 저장하세요.
 
 ChronicCralwer는 django와 celery를 활용합니다.
