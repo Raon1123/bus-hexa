@@ -17,3 +17,9 @@ class NodeOfLane(models.Model):
 
     def __str__(self):
         return self.node_id + " - " + self.node_name + ", order " + str(self.node_order)
+
+class PosOfBus(models.Model):
+    route_key = models.ForeignKey(LaneToTrack, on_delete=models.CASCADE)
+    node_id = models.CharField(max_length=20)
+    bus_num = models.CharField(max_length=20)
+    node_order = models.IntegerField()
