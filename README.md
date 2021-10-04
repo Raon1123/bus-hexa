@@ -9,7 +9,7 @@
 본 프로젝트는 공공 데이터포털에 공개된 울산 버스 BIS를 기반으로 하고 있습니다.
 울산 BUS API는 다음 사이트에서 얻을 수 있습니다.
 [울산 API](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15052669)
-API Key를 `./bushexa/key.txt`에 넣으세요.
+API Key를 `./bushexa/crawler/key.txt, ./bushexa/chroniccrawler/crawler/key.txt`에 넣으세요.
 
 Secret Key는 본 레파지토리를 통해 공개가 되고 있지 않습니다.
 안윤표(anyunpyo@unist.ac.kr)에게 문의하여, Secret Key를 얻은 후 `./bushexa/bushexa/secret_key.txt`에 넣으세요.
