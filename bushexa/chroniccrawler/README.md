@@ -12,7 +12,7 @@ ChronicCrawler는 공공 데이터포털에 공개된 아래 오픈API들을 기
 
 API Key를 `(앱 위치)/crawler/key.txt`에 저장하세요.
 
-ChronicCralwer는 django와 celery를 활용합니다.
+ChronicCraer는 django와 celery를 활용합니다.
 
 [첫 번째 장고 앱 작성하기](https://docs.djangoproject.com/ko/3.2/intro/tutorial01/)
 
