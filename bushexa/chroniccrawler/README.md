@@ -22,10 +22,11 @@ ChronicCrawler는 DB를 활용합니다. migration을 통해 DB를 생성해 주
 
 # 기능
 
-## 버스 노선 정보 가져오기
+## 버스 노선 정보 가져오기, 버스 위치 정보 가져오기
 
 ChronicCrawler는 "국토교통부_버스노선정보"에서 얻은 route_id와 city_code를 
-LaneToTrack 데이터베이스에 저장해 "국토교통부_버스노선정보" 를 통해 각 노선의 정류장 정보를 가져옵니다.
+LaneToTrack 데이터베이스에 저장해 "국토교통부_버스노선정보" 를 통해 각 노선의 정류장 정보를,
+"국토교통부_버스위치정보"를 통해 각 노선의 버스 위치 정보를 가져옵니다.
 
 밑의 과정의 명령은 모두 manage.py가 존재하는 폴더에서 실행하게 됩니다.
 
@@ -93,9 +94,11 @@ celery -A 메인_앱_이름 worker -l info
 ```bash
 [tasks]
   . chroniccrawler.tasks.get_lane_info
+  . chroniccrawler.tasks.get_bus_pos
+  . ...
 ```
 
-chroniccrawler.tasks.get_lane_info task가 나타난다면 성공입니다.
+chroniccrawler.tasks.get_lane_info 등등의 task가 나타난다면 성공입니다.
 작동을 확인하기 위해 celery가 실행되고 있는 terminal은 종료하지 말아주세요.
 
 ### 3. 등록된 노선들의 정류장 순번 가져오기
@@ -132,6 +135,36 @@ api에서 가져온 정보들을 확인할 수 있습니다.
 
 ※주의: NodeOfLane에 직접 새로운 항목을 추가하는 것은 사양해 주세요.
 
-## 버스 위치 정보 가져오기
+### 4. 등록된 노선들의 버스 위치 가져오기
 
-구현 예정
+django 프로젝트의 shell을 열어주세요.
+
+```bash
+python3 manage.py shell
+```
+
+열린 shell에서 task를 import하고 실행해주세요.
+
+```bash
+>>> from chroniccrawler.tasks import get_bus_pos
+>>> get_bus_pos.delay()
+<AsyncResult: some_id_code>
+```
+
+그 후 과정 2에서 실행했던 celery가 foreground에서 작동중인 terminal을 살펴보세요.
+아래와 같이 task를 받았음이 표시된다면 성공입니다.
+
+```bash
+[some_date_time: INFO/MainProcess] Task chroniccrawler.tasks.get_bus_pos[some_id_code] received
+```
+
+현재 celery에서 task가 실행중이며, 완료된다면 아래와 같은 메세지를 볼 수 있습니다.
+
+```bash
+[some_date_time: INFO/some_worker] Task chroniccrawler.tasks.get_bus_pos[some_id_code] succeeded in some_time: None
+```
+
+위 메세지가 뜬 이후, 과정 1에서의 마스터 페이지에서 Pos of buss로 들어가면
+api에서 가져온 정보들을 확인할 수 있습니다.
+
+※주의: PosOfBus에 직접 새로운 항목을 추가하는 것은 사양해 주세요.
