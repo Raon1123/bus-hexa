@@ -31,6 +31,19 @@ class PosOfBus(models.Model):
         return "lane " + self.route_key.bus_name + " : " + self.bus_num + " on node " + str(self.node_order)
 
 
+# Data from 한국천문연구원
+class DayInfo(models.Model):
+    year = models.CharField(max_length=5)
+    month = models.CharField(max_length=3)
+    day = models.CharField(max_length=3)
+    # kind : 0==normal 1==saturday 2==holiday(national, sunday)
+    name = models.CharField(max_length=64)
+    kind = models.IntegerField()
+
+    def __str__(self):
+        ymd = self.year + "년 " + self.month + "월 " + self.day + "은 "
+        return ymd + self.name
+
 # Data from 울산광역시 BIS
 class UlsanBus_LaneToTrack(models.Model):
     route_key = models.ForeignKey(LaneToTrack, on_delete=models.CASCADE)
