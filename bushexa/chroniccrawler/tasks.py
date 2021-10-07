@@ -5,6 +5,8 @@ from .crawler.buspos import do_buspos
 from .crawler.timetable_usb import do_timetable
 from .crawler.dayinfo import do_dayinfo
 
+from .models import DayInfo
+
 
 @shared_task
 def get_lane_info():
@@ -17,8 +19,11 @@ def get_bus_pos():
 
 
 @shared_task
-def get_time_table(dayOfWeek):
-    do_timetable(dayOfWeek)
+def get_time_table():
+    dayInfo = DayInfo.objects.first()
+    if dayInfo == None:
+        return
+    do_timetable(dayInfo.kind)
 
 
 @shared_task
