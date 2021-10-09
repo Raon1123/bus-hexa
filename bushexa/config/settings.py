@@ -40,15 +40,16 @@ if DEBUG:
 # Application definition
 
 INSTALLED_APPS = [
-    'timetable.apps.TimetableConfig',
-    'chroniccrawler.apps.ChroniccrawlerConfig',
-    'django_celery_beat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
+    'django_celery_results', 
+    'timetable.apps.TimetableConfig',
+    'chroniccrawler.apps.ChroniccrawlerConfig',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# Celery settings - database backend
+
+CELERY_RESULT_BACKEND = 'django-db'
