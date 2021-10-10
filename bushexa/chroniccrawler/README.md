@@ -20,6 +20,82 @@ ChronicCrawler는 django와 celery를 활용합니다.
 
 ChronicCrawler는 DB를 활용합니다. migration을 통해 DB를 생성해 주세요.
 
+# Django Models
+
+각 항목의 datatype은 별도의 표시가 없는 한 string입니다.
+
+## LaneToTrack
+
+### 위 모델에 추적할 버스의 정보를 직접 추가해주세요.
+
+bus_name : 버스_번호(??? 방면)  예)337(삼남 순환)
+
+route_id : 국토교통부 버스 api에서 사용하는 버스 노선 id.  예)USB196103373
+
+city_code : 국토교통부 버스 api에서 사용하는 도시코드.  예)26
+
+## NodeOfLane
+
+### 각 버스 노선의 각 정류장과 그 순번에 대한 정보를 가집니다. LaneToTrack에 저장된 각 버스 노선의 정보를 자동으로 가져옵니다.
+
+route_key : LaneToTrack (ForeignKey)
+
+node_order : 해당 노선에서 해당 정류장의 순번. (integer)
+
+node_id : 국토교통부 버스 api에서 사용하는 정류장 id.
+
+node_name : 해당 정류장의 이름.
+
+## PosOfBus
+
+### 각 버스 노선의 현재 운행중인 모든 버스와 그 위치에 대한 정보를 가집니다. LaneToTrack에 저장된 각 버스 노선의 정보를 자동으로 가져옵니다.
+
+route_key : LaneToTrack (ForeignKey)
+
+node_id : (불확실합니다. 정확한 정보를 얻을 시 수정해주세요.)제일 마지막으로 지난 정류장의 국토교통부 버스 api에서 사용하는 정류장 id.
+
+bus_num : 해당 버스의 자동차등록번호.
+
+node_order : 제일 마지막으로 지난 정류장의 해당 노선에서의 순번. (integer)
+
+## DayInfo
+
+### 오늘의 날짜 정보와 공휴일 또는 토요일 등에 대한 정보를 가집니다. 한국천문연구원의 특일정보 api에서 자동으로 가져옵니다.
+
+year : 년도
+
+month : 월
+
+day : 일
+
+name : 해당 날의 이름 (일반 : 주중, 토요일 : 토요일, 일요일 : 일요일, 그 외 공휴일 : api에서 표시해주는 이름 예)한글날)
+
+kind : 해당 날의 종류 (일반 : 0, 토요일 : 1, 일요일 및 공휴일 : 2)
+
+## UlsanBus_LaneToTrack
+
+### LaneToTrack에서 가져오기로 정한 노선들의 추가적인 정보를 가집니다. 울산 BIS api에서 검색해 직접 추가해주세요.
+
+route_key : LaneToTrack (ForeignKey)
+
+route_id : 울산 BIS api에서 사용하는 노선 id.
+
+route_num : 버스 노선 번호.
+
+route_direction : 울산 BIS api에서 검색 후 direction 항목 참조
+
+route_class : 울산 BIS api에서 검색 후 class 항목 참조
+
+## UlsanBus_TimeTable
+
+### 각 버스 노선의 시간표 정보를 가져옵니다. UlsanBus_LaneToTrack에 저장된 각 노선의 정보를 자동으로 가져옵니다.
+
+route_key_usb : UlsanBus_LaneToTrack (ForeignKey)
+
+depart_time : 출발 시간. 숫자 4자리. 예)2300 : 23시 00분
+
+depart_seq : 해당 노선의 시간표에서 몇번째 순번에 해당하는지에 대한 정보.
+
 # 기능
 
 ## 버스 노선 정보 가져오기, 버스 위치 정보 가져오기
