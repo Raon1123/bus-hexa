@@ -1,5 +1,7 @@
 import requests
 import os
+import xmltodict
+import json
 
 default_key_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'key.txt')
 
