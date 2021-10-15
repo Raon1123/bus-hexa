@@ -27,3 +27,6 @@ pyvenv.cfg
 
 # static files
 static
+
+# migrations
+migrations
