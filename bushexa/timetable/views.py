@@ -33,7 +33,7 @@ class BusInfoMixin:
     버스 번호 기준으로 표시
     """
     def get_businfo_context(self) -> Dict[str, Any]:
-        crawl_arrival() # 추후 API에 직접 요청하는 부분을 삭제할것 **FIXIT**
+        # crawl_arrival() # 추후 API에 직접 요청하는 부분을 삭제할것 **FIXIT**
 
         bus_info = get_busstop_time(self.STOP_ID)
         stop_name = get_stop_string(self.STOP_ID)

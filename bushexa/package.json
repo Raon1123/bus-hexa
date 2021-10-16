@@ -1,5 +1,6 @@
 {
   "name": "bushexa",
+  "license": "MIT",
   "scripts": {
     "buildcss": "npx tailwindcss -i ./static/src/styles.pcss -o ./static/src/styles.css"
   },

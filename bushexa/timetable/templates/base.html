@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'src/styles.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'src/styles.css' %}"> -->
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
     <script src="https://unpkg.com/petite-vue" defer></script>
+    {% block head %}{% endblock head %}
 
     <title>
         {% block title %}{% endblock title %}
@@ -14,13 +16,13 @@
 </head>
 <body>
 
-    <div class="container">
-        {% include "partials/header.html" %}
+    {% include "partials/header.html" %}
     
+    <main>
         {% block content %}{% endblock content %}
-        
         {% include "partials/footer.html" %}
-    </div>
+    </main>
+    
 
     {% csrf_token %}
     
