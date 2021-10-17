@@ -19,6 +19,7 @@ db.sqlite3
 
 # Hide log
 log.txt
+*.log
 
 # Virtualenv files
 bin
@@ -26,4 +27,12 @@ lib
 pyvenv.cfg
 
 # static files
-static
+static/admin
+
+# migrations
+migrations
+
+# js files
+package-lock.json
+*.lock
+node_modules
