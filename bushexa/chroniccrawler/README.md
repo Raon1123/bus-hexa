@@ -23,7 +23,7 @@ sudo service postgresql start
 ### 실행 후 psql로 접속하기
 
 ```
-psql -U postgres -h localhost
+sudo -u postgres psql
 ```
 
 ### psql에서 chroniccrawler 유저, chroniccrawler 데이터베이스, password도 chroniccrawler로 만들고 chroniccrawler 유저에게 권한 주기
