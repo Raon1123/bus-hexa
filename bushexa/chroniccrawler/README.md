@@ -12,7 +12,7 @@ postgresql 설치 (apt)
 
 ### api 키 넣기
 
-./chroniccrawler/crawler/key.txt를 생성해 key를 넣어주세요.
+root_of_repo/chroniccrawler/crawler/key.txt를 생성해 key를 넣어주세요.
 
 ### postgresql 설치 후 실행하기
 
