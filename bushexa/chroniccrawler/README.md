@@ -1,5 +1,98 @@
 # ChronicCrawler
 
+# 난 모르겠고 빨리 작동하는거나 보고싶어요
+
+## 설치할 것
+
+rabbitmq-server 설치 (apt)
+postgresql 설치 (apt)
+그 외 requirements.txt에 추가된것들도 설치 (pip)
+
+## 준비사항
+
+### api 키 넣기
+
+root_of_repo/chroniccrawler/crawler/key.txt를 생성해 key를 넣어주세요.
+
+### postgresql 설치 후 실행하기
+
+```
+sudo service postgresql start
+```
+
+### 실행 후 psql로 접속하기
+
+```
+sudo -u postgres psql
+```
+
+### psql에서 chroniccrawler 유저, chroniccrawler 데이터베이스, password도 chroniccrawler로 만들고 chroniccrawler 유저에게 권한 주기
+
+```
+CREATE USER chroniccrawler WITH PASSWORD 'chroniccrawler';
+
+CREATE DATABASE chroniccrawler OWNER chroniccrawler;
+```
+
+이 시점에서 psql이 열려있는 terminal은 종료해도 됩니다
+
+### rabbitmq-server 실행하기
+
+```
+sudo rabbitmq-server
+```
+
+이 시점에서 현재 terminal은 종료해도 됩니다
+
+### 마이그레이션 하기
+
+```
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
+
+### django 앱 실행 (실행 유지)
+
+```
+python3 manage.py runserver
+```
+
+### django 앱의 슈퍼유저 만들기
+
+```
+python3 manage.py createsuperuser
+```
+
+이후 절차에 따라 슈퍼유저를 만들어주세요.
+
+### 관리자 페이지 접속
+
+대충 아무 인터넷 브라우저나 열어서 접속해주세요. 아마도 127.0.0.1:8000/master 일겁니다.
+
+### 요청할 노선, 정류장 등록하기 (현시점 정류장은 미등록입니다.)
+
+여러 DB가 보일것입니다. 그 중 CHRONICCRAWLER란의 항목 중 Lane to tracks와 Ulsan bus_ lane to tracks에 직접 정보를 등록해야 합니다.
+
+Lane to tracks에 bus name, route id, city code란에 국토교통부 api상의 해당 노선의 정보를 등록해주세요.
+
+Ulsan bus_ lane to tracks에 동일 노선의 울산 BIS api상의 해당 노선의 정보를 등록해주세요.
+
+### celery worker 실행 (실행 유지)
+
+```
+celery -A config worker -l INFO
+```
+
+### celery beat 실행 (실행 유지)
+
+```
+celery -A config beat
+```
+
+이 시점에서 자동으로 일정 시간마다 등록한 노선과 정류장에 대한 정보를 요청해 db에 저장할것입니다.
+
+CHRONICCRAWLER의 수동 등록 항목을 제외한 모든 DB 항목은 celery beat가 처음 실행될 때 한번 새로고침되며, Day infos, Node of lanes, Ulsan bus_ time tables는 매일 00:01에 한번, Pos of buss는 매 20초마다 한번 새로고침되도록 설정되어있습니다. 당연히 바꿀 수 있으니 상의 후 바꿔주시기 바랍니다.
+
 # 들어가기
 
 ## 시작하기에 앞서
