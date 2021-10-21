@@ -56,7 +56,7 @@ def on_start_beat(sender, **k):
     app.control.purge()
 
     # Do required tasks on startup
-    from chroniccrawler.tasks import get_day_info, get_lane_info, get_time_table, get_bus_pos 
+    from chroniccrawler.tasks import get_day_info, get_lane_info, get_time_table, get_bus_pos, get_arrival_info 
     result = chain(get_day_info.si(), get_lane_info.si(), get_time_table.si())()
     while not result.ready():
         pass
@@ -71,6 +71,8 @@ def on_start_beat(sender, **k):
     buspos_schedule, _ = IntervalSchedule.objects.get_or_create(every=30, period=IntervalSchedule.SECONDS,)
     PeriodicTask.objects.get_or_create(interval=buspos_schedule, 
         name='Getting bus positions', task='chroniccrawler.tasks.get_bus_pos',)
+    PeriodicTask.objects.get_or_create(interval=buspos_schedule, 
+        name='Getting arrival infos', task='chroniccrawler.tasks.get_arrival_info')
 
     return
 
