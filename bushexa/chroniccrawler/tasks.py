@@ -4,6 +4,7 @@ from .crawler.laneinfo import do_laneinfo
 from .crawler.buspos import do_buspos
 from .crawler.timetable_usb import do_timetable
 from .crawler.dayinfo import do_dayinfo
+from .crawler.arrivalinfo import do_arrivalinfo
 
 from .models import DayInfo
 
@@ -29,6 +30,11 @@ def get_time_table():
 @shared_task
 def get_day_info():
     do_dayinfo()
+
+
+@shared_task
+def get_arrival_info():
+    do_arrivalinfo()
 
 
 @shared_task

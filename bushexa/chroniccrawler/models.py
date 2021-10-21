@@ -64,3 +64,22 @@ class UlsanBus_TimeTable(models.Model):
     def __str__(self):
         return self.route_key_usb.route_key.bus_name + " number " + str(self.depart_seq) + " departing on " + self.depart_time
 
+# Data from 울산광역시 BIS
+class UlsanBus_NodeToTrack(models.Model):
+    node_name = models.CharField(max_length=40)
+    node_id = models.CharField(max_length=20)
+
+    def __str__(self):
+        return "Tracking bus stop " + self.node_id + " : " + self.node_name
+
+# Data from 울산광역시 BIS
+class UlsanBus_ArrivalInfo(models.Model): 
+    route_key_usb = models.ForeignKey(UlsanBus_LaneToTrack, on_delete=models.CASCADE)
+    node_key_usb = models.ForeignKey(UlsanBus_NodeToTrack, on_delete=models.CASCADE)
+    prev_stop_cnt = models.IntegerField()
+    arrival_time = models.IntegerField()
+    vehicle_no = models.CharField(max_length=20)
+    
+
+    def __str__(self):
+        return str(self.prev_stop_num) + " stop(s) left, estimated arrival time " + str(self.arrival_time)
