@@ -25,9 +25,6 @@ db.sqlite3
 # Hide log
 log.txt
 
-# Hide migrations
-chroniccrawler/migrations/
-
 # Virtualenv files
 bin
 lib
