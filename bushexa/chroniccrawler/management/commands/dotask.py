@@ -6,28 +6,36 @@ from chroniccrawler.crawler.timetable_usb import do_timetable
 from chroniccrawler.crawler.buspos import do_buspos
 from chroniccrawler.crawler.arrivalinfo import do_arrivalinfo
 
+from chroniccrawler.models import DayInfo
+
 class Command(BaseCommand):
-    help = "Execute request-and-store-on-database tasks"
+    help = "Execute request-and-store-on-database tasks.\nPlease pass only one argument per execution."
 
     def add_arguments(self, parser):
-        parser.add_argument('--arrival', action='store_true', help='do arrival related tasks')
-        parser.add_argument('--position', action='store_true', help='do bus position related tasks')
-        parser.add_argument('--date', action='store_true', help='do date related tasks')
-        parser.add_argument('--lane', action='store_true', help='do lane related tasks')
-        parser.add_argument('--timetable', action='store_true', help='do timetable related tasks')
+        parser.add_argument('--daily', action='store_true', help='Do daily tasks(date, lane, timetable)')
+        parser.add_argument('--timed', action='store_true', help='Do timed tasks(position, arrival)')
+        parser.add_argument('--arrival', action='store_true', help='test : do arrival related tasks')
+        parser.add_argument('--position', action='store_true', help='test : do bus position related tasks')
+        parser.add_argument('--date', action='store_true', help='test : do date related tasks')
+        parser.add_argument('--lane', action='store_true', help='test : do lane related tasks')
+        parser.add_argument('--timetable', action='store_true', help='test : do timetable related tasks')
 
     def handle(self, *args, **options):
-        if options['date']:
+        if options['daily']:
             do_dayinfo()
-
-        if options['lane']:
             do_laneinfo()
-
-        if options['timetable']:
-            do_timetable()
-
-        if options['position']:
+            dayinfo = DayInfo.objects.first()
+            do_timetable(dayinfo.kind)
+        elif options['timed']:
+            pass
+        elif options['date']:
+            do_dayinfo()
+        elif options['lane']:
+            do_laneinfo()
+        elif options['timetable']:
+            dayinfo = DayInfo.objects.first()
+            do_timetable(dayinfo.kind)
+        elif options['position']:
             do_buspos()
-
-        if options['arrival']:
+        elif options['arrival']:
             do_arrivalinfo()
