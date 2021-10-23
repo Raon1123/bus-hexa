@@ -1,10 +1,11 @@
 # ChronicCrawler
 
+# 야채가 싫어서 셀러리는 뺐습니다
+
 # 난 모르겠고 빨리 작동하는거나 보고싶어요
 
 ## 설치할 것
 
-rabbitmq-server 설치 (apt)
 postgresql 설치 (apt)
 그 외 requirements.txt에 추가된것들도 설치 (pip)
 
@@ -35,14 +36,6 @@ CREATE DATABASE chroniccrawler OWNER chroniccrawler;
 ```
 
 이 시점에서 psql이 열려있는 terminal은 종료해도 됩니다
-
-### rabbitmq-server 실행하기
-
-```
-sudo rabbitmq-server
-```
-
-이 시점에서 현재 terminal은 종료해도 됩니다
 
 ### 마이그레이션 하기
 
@@ -77,25 +70,37 @@ Lane to tracks에 bus name, route id, city code란에 국토교통부 api상의 
 
 Ulsan bus_ lane to tracks에 동일 노선의 울산 BIS api상의 해당 노선의 정보를 등록해주세요.
 
-### celery worker 실행 (실행 유지)
+### 매일 해야 할 작업 실행하기
 
 ```
-celery -A config worker -l INFO
+python3 manage.py dotask --daily
 ```
 
-### celery beat 실행 (실행 유지)
+일정 시간에 자동으로 실행되기를 원한다면 cron 등의 스케쥴러에 명령을 등록해주세요.
+
+### 일정 시간마다 해야할 작업 실행하기
 
 ```
-celery -A config beat
+python3 manage.py dotask --timed
 ```
 
-이 시점에서 자동으로 일정 시간마다 등록한 노선과 정류장에 대한 정보를 요청해 db에 저장할것입니다.
+일정 시간에 자동으로 실행되기를 원한다면 cron 등의 스케쥴러에 명령을 등록해주세요.
 
-CHRONICCRAWLER의 수동 등록 항목을 제외한 모든 DB 항목은 celery beat가 처음 실행될 때 한번 새로고침되며, Day infos, Node of lanes, Ulsan bus_ time tables는 매일 00:01에 한번, Pos of buss는 매 20초마다 한번 새로고침되도록 설정되어있습니다. 당연히 바꿀 수 있으니 상의 후 바꿔주시기 바랍니다.
+### cron 등록 예시
+
+virtualenv 사용 시에는 밑의 예시처럼 등록하면 정상적으로 작동할것입니다.
+
+예시) * * * * * /home/!username!/.virtualenvs/!environment!/bin/python3 /path/to/django/app/manage.py dotask --timed
+
+스케쥴러가 제대로 작동한다면 이 시점에서 자동으로 일정 시간마다 등록한 노선과 정류장에 대한 정보를 요청해 db에 저장할것입니다.
+
+다만 기본 cron은 1분이 최소 단위이기 때문에 더 자주 실행하려면 별도의 무언가가 필요합니다.
 
 # 들어가기
 
 ## 시작하기에 앞서
+
+Celery를 삭제했으나 이 후로부터는 여전히 그에 대한 내용이 남아있습니다. 곧 수정할테니 무시해주세요...
 
 ChronicCrawler는 공공 데이터포털에 공개된 아래 오픈API들을 기반으로 하고 있습니다.
 
