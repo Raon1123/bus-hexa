@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_celery_beat',
     'django_celery_results', 
     'timetable.apps.TimetableConfig',
     'chroniccrawler.apps.ChroniccrawlerConfig',
@@ -145,6 +144,3 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# Celery settings - database backend
-
-CELERY_RESULT_BACKEND = 'django-db'
