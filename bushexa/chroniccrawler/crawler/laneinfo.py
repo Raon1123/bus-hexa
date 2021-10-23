@@ -1,8 +1,7 @@
-import requests
 import itertools
-import xmltodict
 
 from .tools.getkey import get_key
+from .tools.requestor import request_dict
 
 from chroniccrawler.models import LaneToTrack, NodeOfLane
 
@@ -27,15 +26,8 @@ def request_lane_info(lane):
     params = {'serviceKey': serviceKey, 'numOfRows': numOfRows, 'pageNo': pageNo,
               'cityCode': cityCode, 'routeId': routeId}
 
-    response = requests.get(url, params=params)
-
-    # TODO : do error check on the responses
-
-    xml = response.text
-
-    resdict = xmltodict.parse(xml)
-
-    return resdict
+    rdict = request_dict(url, params)
+    return rdict
 
 
 def store_lane_info(lane, resdict):

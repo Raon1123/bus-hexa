@@ -1,7 +1,5 @@
-import requests
-import xmltodict
-
 from .tools.getkey import get_key
+from .tools.requestor import request_dict
 
 from chroniccrawler.models import UlsanBus_LaneToTrack, UlsanBus_TimeTable
 
@@ -26,13 +24,8 @@ def request_time_table(lane, dayOfWeek):
     params = {'serviceKey': serviceKey, 'pageNo': pageNo,
                 'numOfRows': numOfRows, 'routeNo': routeNo, 'dayOfWeek': dayOfWeek}
 
-    response = requests.get(url, params=params)
-
-    xml = response.text
-
-    resdict = xmltodict.parse(xml)
-
-    return resdict
+    rdict = request_dict(url, params)
+    return rdict
 
 
 def store_time_table(lane, resdict, dayOfWeek):

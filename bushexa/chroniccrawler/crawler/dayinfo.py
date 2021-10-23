@@ -1,9 +1,7 @@
-import requests
-import xmltodict
-
 import datetime
 
 from .tools.getkey import get_key
+from .tools.requestor import request_dict
 
 from chroniccrawler.models import DayInfo
 
@@ -22,13 +20,8 @@ def request_dayinfo(now):
 
     params = {'serviceKey': key, 'numOfRow': rows, 'solYear': year, 'solMonth': month}
 
-    response = requests.get(url, params=params)
-
-    xml = response.text
-
-    resdict = xmltodict.parse(xml)
-
-    return resdict
+    rdict = request_dict(url, params)
+    return rdict
 
 
 def store_dayinfo(now, resdict):

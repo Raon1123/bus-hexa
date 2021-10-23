@@ -1,7 +1,5 @@
-import requests
-import xmltodict
-
 from .tools.getkey import get_key
+from .tools.requestor import request_dict
 
 from chroniccrawler.models import LaneToTrack, PosOfBus
 
@@ -26,15 +24,9 @@ def request_bus_pos(lane):
     params = {'serviceKey': serviceKey, 'numOfRows': numOfRows, 'pageNo': pageNo,
               'cityCode': cityCode, 'routeId': routeId}
 
-    response = requests.get(url, params=params)
+    rdict = request_dict(url, params)
 
-    # TODO : do error check on the responses
-
-    xml = response.text
-
-    resdict = xmltodict.parse(xml)
-
-    return resdict
+    return rdict
 
 
 def store_bus_pos(lane, resdict):

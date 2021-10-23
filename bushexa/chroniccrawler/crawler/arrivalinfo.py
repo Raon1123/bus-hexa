@@ -1,7 +1,5 @@
-import requests
-import xmltodict
-
 from .tools.getkey import get_key
+from .tools.requestor import request_dict
 
 from chroniccrawler.models import UlsanBus_LaneToTrack, UlsanBus_NodeToTrack, UlsanBus_ArrivalInfo
 
@@ -24,13 +22,9 @@ def request_arrival_info(node):
     params = {'serviceKey': key, 'numOfRows': nor, 'pageNo': pn,
               'stopid': node.node_id}
 
-    response = requests.get(url, params=params)
+    rdict = request_dict(url, params)
 
-    xml = response.text
-
-    resdict = xmltodict.parse(xml)
-
-    return resdict
+    return rdict
 
 
 # Store arrival information
