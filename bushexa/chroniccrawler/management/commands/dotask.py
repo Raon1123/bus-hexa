@@ -27,7 +27,8 @@ class Command(BaseCommand):
             dayinfo = DayInfo.objects.first()
             do_timetable(dayinfo.kind)
         elif options['timed']:
-            pass
+            do_buspos()
+            do_arrivalinfo()
         elif options['date']:
             do_dayinfo()
         elif options['lane']:
