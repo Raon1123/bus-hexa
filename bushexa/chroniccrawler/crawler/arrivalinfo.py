@@ -25,7 +25,7 @@ def request_arrival_info(node):
 
     rdict = request_dict(url, params)
 
-    count = rdict['tableInfo']['totalCnt']
+    count = ['tableInfo', 'totalCnt']
     elem  = ['tableInfo', 'list', 'row']
 
     info = element_list(count, rdict, elem)

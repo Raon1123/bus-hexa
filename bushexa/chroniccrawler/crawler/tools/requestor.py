@@ -9,5 +9,8 @@ def request_dict(url, params):
     if r.status_code != 200:
         raise Exception("Abnormal response : " + str(r.status_code))
 
+    # print(r.status_code)
+    # print(r.text)
+
     d = xmltodict.parse(r.text)
     return d

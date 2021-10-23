@@ -27,7 +27,7 @@ def request_time_table(lane, dayOfWeek):
 
     rdict = request_dict(url, params)
 
-    count = rdict['tableInfo']['totalCnt']
+    count = ['tableInfo', 'totalCnt']
     elem  = ['tableInfo', 'list', 'row']
 
     info = element_list(count, rdict, elem)

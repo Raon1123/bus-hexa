@@ -27,7 +27,7 @@ def request_bus_pos(lane):
 
     rdict = request_dict(url, params)
 
-    count = rdict['response']['body']['totalCount']
+    count = ['response', 'body', 'totalCount']
     elem  = ['response', 'body', 'items', 'item']
 
     info = element_list(count, rdict, elem)
