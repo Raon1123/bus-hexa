@@ -1,5 +1,6 @@
 from .tools.getkey import get_key
 from .tools.requestor import request_dict
+from .tools.listifier import element_list
 
 from chroniccrawler.models import UlsanBus_LaneToTrack, UlsanBus_TimeTable
 
@@ -25,25 +26,23 @@ def request_time_table(lane, dayOfWeek):
                 'numOfRows': numOfRows, 'routeNo': routeNo, 'dayOfWeek': dayOfWeek}
 
     rdict = request_dict(url, params)
-    return rdict
+
+    count = rdict['tableInfo']['totalCnt']
+    elem  = ['tableInfo', 'list', 'row']
+
+    info = element_list(count, rdict, elem)
+
+    return info
 
 
-def store_time_table(lane, resdict, dayOfWeek):
+def store_time_table(lane, info, dayOfWeek):
     ## structure of resdict :
     # resdict - tableInfo - pageno, numofrows, totalcnt, resultcode, resultmsg
     #                     - list - row - direction, time, class, rnum, routename, routeno, dptcseqno
     # for thing in resdict[tableinfo][list] => each time of response
-    new_times = None
     new_timeslist = []
-    if resdict['tableInfo']['totalCnt'] == '0':
-        UlsanBus_TimeTable.objects.filter(route_key_usb=lane).delete()
-        return
-    elif resdict['tableInfo']['totalCnt'] == '1':
-        new_times = [resdict['tableInfo']['list']['row']]
-    else:
-        new_times = resdict['tableInfo']['list']['row']
 
-    for new_time in new_times:
+    for new_time in info:
         if new_time['CLASS'] == str(lane.route_class) and new_time['DIRECTION'] == str(lane.route_direction):
             departtime = new_time['TIME']
             departseq = int(new_time['DPTCSEQNO'])
@@ -60,5 +59,5 @@ def do_timetable(dayOfWeek):
     lanes = get_all_lanes_to_request()
 
     for lane in lanes:
-        resdict = request_time_table(lane, dayOfWeek)
-        store_time_table(lane, resdict, dayOfWeek)
+        info = request_time_table(lane, dayOfWeek)
+        store_time_table(lane, info, dayOfWeek)

@@ -2,6 +2,7 @@ import itertools
 
 from .tools.getkey import get_key
 from .tools.requestor import request_dict
+from .tools.listifier import element_list
 
 from chroniccrawler.models import LaneToTrack, NodeOfLane
 
@@ -27,30 +28,17 @@ def request_lane_info(lane):
               'cityCode': cityCode, 'routeId': routeId}
 
     rdict = request_dict(url, params)
-    return rdict
+
+    count = rdict['response']['body']['totalCount']
+    elem  = ['response', 'body', 'items', 'item']
+
+    info = element_list(count, rdict, elem)
+
+    return info
 
 
-def store_lane_info(lane, resdict):
-    # Parse station information of one lane : end
-
-    ## structure of created resdict dictionary is :
-    # resdict - response - head - responsecode, responsetext
-    #                    - body - items, numofrows, pageno, totalcount
-    #
-    # for thing in resdict[response][body][items][item] => each node of lane
-        
-    # Create object of model nodeoflane and save it to database(possibly replacing existing ones)
-
-
-
-    if resdict['response']['body']['totalCount'] == '0':
-        NodeOfLane.objects.filter(route_key=lane).delete()
-        return
-    elif resdict['response']['body']['totalCount'] == '1':
-        new_nodes = [resdict['response']['body']['items']['item']]
-    else:
-        new_nodes = resdict['response']['body']['items']['item']    
-
+def store_lane_info(lane, info):
+    new_nodes = info
     original_nodes = NodeOfLane.objects.filter(route_key=lane).order_by('node_order')
     are_the_two_different = False
     if len(original_nodes) != len(new_nodes):
@@ -80,5 +68,5 @@ def do_laneinfo():
     lanes = get_all_lanes_to_request()
 
     for lane in lanes:
-        resdict = request_lane_info(lane)
-        store_lane_info(lane, resdict)
+        info = request_lane_info(lane)
+        store_lane_info(lane, info)
