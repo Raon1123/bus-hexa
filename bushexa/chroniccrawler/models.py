@@ -82,4 +82,4 @@ class UlsanBus_ArrivalInfo(models.Model):
     
 
     def __str__(self):
-        return str(self.prev_stop_num) + " stop(s) left, estimated arrival time " + str(self.arrival_time)
+        return str(self.prev_stop_cnt) + " stop(s) left, estimated arrival time " + str(self.arrival_time)

@@ -1,7 +1,6 @@
-import requests
-import xmltodict
-
-from .getkey import get_key
+from .tools.getkey import get_key
+from .tools.requestor import request_dict
+from .tools.listifier import element_list
 
 from chroniccrawler.models import UlsanBus_LaneToTrack, UlsanBus_NodeToTrack, UlsanBus_ArrivalInfo
 
@@ -24,33 +23,20 @@ def request_arrival_info(node):
     params = {'serviceKey': key, 'numOfRows': nor, 'pageNo': pn,
               'stopid': node.node_id}
 
-    response = requests.get(url, params=params)
+    rdict = request_dict(url, params)
 
-    xml = response.text
+    count = rdict['tableInfo']['totalCnt']
+    elem  = ['tableInfo', 'list', 'row']
 
-    resdict = xmltodict.parse(xml)
+    info = element_list(count, rdict, elem)
 
-    return resdict
+    return info
 
 
 # Store arrival information
-def store_arrival_info(node, resdict):
-    ## structure of created resdict dictionary is :
-    # resdict - tableInfo - pageno, numofrows, totalcnt, resultcode, resultmsg
-    #                     - list - row - vehicleno, rnum, prevstopcnt, arrivaltime,
-    #                                    routeid, stopid, stopnm, presentstopnm, routem
-    new_arrivals = None
-    new_arrlist = []
-    if resdict['tableInfo']['totalCnt'] == '0':
-        UlsanBus_ArrivalInfo.objects.filter(node_key_usb=node).delete()
-        return
-    elif resdict['tableInfo']['totalCnt'] == '1':
-        new_arrivals = [resdict['tableInfo']['list']['row']]
-    else:
-        new_arrivals = resdict['tableInfo']['list']['row']
-
+def store_arrival_info(node, info):
     UlsanBus_ArrivalInfo.objects.filter(node_key_usb=node).delete()
-    for new_arr in new_arrivals:
+    for new_arr in info:
         routekey = None
         try:
             routekey = UlsanBus_LaneToTrack.objects.get(route_id=new_arr['ROUTEID'])
@@ -72,5 +58,5 @@ def do_arrivalinfo():
     nodes = get_all_nodes_to_request()
 
     for node in nodes:
-        resdict = request_arrival_info(node)
-        store_arrival_info(node, resdict)
+        info = request_arrival_info(node)
+        store_arrival_info(node, info)

@@ -1,7 +1,6 @@
-import requests
-import xmltodict
-
-from .getkey import get_key
+from .tools.getkey import get_key
+from .tools.requestor import request_dict
+from .tools.listifier import element_list
 
 from chroniccrawler.models import LaneToTrack, PosOfBus
 
@@ -26,33 +25,19 @@ def request_bus_pos(lane):
     params = {'serviceKey': serviceKey, 'numOfRows': numOfRows, 'pageNo': pageNo,
               'cityCode': cityCode, 'routeId': routeId}
 
-    response = requests.get(url, params=params)
+    rdict = request_dict(url, params)
 
-    # TODO : do error check on the responses
+    count = rdict['response']['body']['totalCount']
+    elem  = ['response', 'body', 'items', 'item']
 
-    xml = response.text
-
-    resdict = xmltodict.parse(xml)
-
-    return resdict
+    info = element_list(count, rdict, elem)
+    
+    return info
 
 
-def store_bus_pos(lane, resdict):
-    ## structure of created resdict dictionary is : 
-    # resdict - response - head - resultcode, resultmsg
-    #                    - body - items, numofrows, pageno, totalcount
-    # for thing in resdict[response][body][items][item] => each bus of response
-    new_poses = None
+def store_bus_pos(lane, info):
     new_posofbus = []
-    if resdict['response']['body']['totalCount'] == '0':
-        PosOfBus.objects.filter(route_key=lane).delete()
-        return
-    elif resdict['response']['body']['totalCount'] == '1':
-        new_poses = [resdict['response']['body']['items']['item']]
-    else:
-        new_poses = resdict['response']['body']['items']['item']
-
-    for newbus in new_poses:
+    for newbus in info:
         nodeid = newbus['nodeid']
         vehicleno = newbus['vehicleno']
         nodeord = newbus['nodeord']
@@ -70,5 +55,5 @@ def do_buspos():
     lanes = get_all_lanes_to_request()
 
     for lane in lanes:
-        resdict = request_bus_pos(lane)
-        store_bus_pos(lane, resdict)
+        info = request_bus_pos(lane)
+        store_bus_pos(lane, info)
