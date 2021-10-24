@@ -1,5 +1,5 @@
 from .tools.getkey import get_key
-from .tools.requestor import request_dict
+from .tools.requestor import request_dicts
 from .tools.listifier import element_list
 
 from chroniccrawler.models import UlsanBus_LaneToTrack, UlsanBus_TimeTable
@@ -12,30 +12,23 @@ def get_all_lanes_to_request():
     return lanes
 
 
-# Request timetable for a lane
-def request_time_table(lane, dayOfWeek):
+# Ready lists of requests
+def ready_request(lanes, dayOfWeek):
+    lane_url_params = []
     serviceKey = get_key()
-
     pageNo = '1'
     numOfRows = '255'
-    routeNo = lane.route_num
-
     url = 'http://openapi.its.ulsan.kr/UlsanAPI/BusTimetable.xo'
+    for lane in lanes:
+        params = {'serviceKey': serviceKey, 'pageNo': pageNo,'numOfRows': numOfRows, 
+                  'routeNo': lane.route_num, 'dayOfWeek': dayOfWeek}
 
-    params = {'serviceKey': serviceKey, 'pageNo': pageNo,
-                'numOfRows': numOfRows, 'routeNo': routeNo, 'dayOfWeek': dayOfWeek}
+        lane_url_params.append((lane, url, params))
 
-    rdict = request_dict(url, params)
-
-    count = ['tableInfo', 'totalCnt']
-    elem  = ['tableInfo', 'list', 'row']
-
-    info = element_list(count, rdict, elem)
-
-    return info
+    return lane_url_params
 
 
-def store_time_table(lane, info, dayOfWeek):
+def store_time_table(lane, info):
     ## structure of resdict :
     # resdict - tableInfo - pageno, numofrows, totalcnt, resultcode, resultmsg
     #                     - list - row - direction, time, class, rnum, routename, routeno, dptcseqno
@@ -58,6 +51,10 @@ def store_time_table(lane, info, dayOfWeek):
 def do_timetable(dayOfWeek):
     lanes = get_all_lanes_to_request()
 
-    for lane in lanes:
-        info = request_time_table(lane, dayOfWeek)
-        store_time_table(lane, info, dayOfWeek)
+    l_u_ps = ready_request(lanes, dayOfWeek)
+
+    lane_rdicts = request_dicts(l_u_ps)
+
+    for lr in lane_rdicts:
+        info = element_list(['tableInfo', 'totalCnt'], lr[1], ['tableInfo', 'list', 'row'])
+        store_time_table(lr[0], info)

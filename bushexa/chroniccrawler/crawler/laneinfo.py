@@ -1,7 +1,7 @@
 import itertools
 
 from .tools.getkey import get_key
-from .tools.requestor import request_dict
+from .tools.requestor import request_dicts
 from .tools.listifier import element_list
 
 from chroniccrawler.models import LaneToTrack, NodeOfLane
@@ -13,28 +13,20 @@ def get_all_lanes_to_request():
 
     return lanes
 
-# Request lane information for a lane
-def request_lane_info(lane):
-    # Parse station information of one lane : start
+# Ready lists of lane informations
+def ready_request(lanes):
+    lane_url_params = []
     serviceKey = get_key()
     numOfRows = '200'
     pageNo = '1'
-    cityCode = lane.city_code
-    routeId = lane.route_id
-
     url = 'http://openapi.tago.go.kr/openapi/service/BusRouteInfoInqireService/getRouteAcctoThrghSttnList'
+    for lane in lanes:
+        params = {'serviceKey': serviceKey, 'numOfRows': numOfRows, 'pageNo': pageNo,
+                  'cityCode': lane.city_code, 'routeId': lane.route_id}
 
-    params = {'serviceKey': serviceKey, 'numOfRows': numOfRows, 'pageNo': pageNo,
-              'cityCode': cityCode, 'routeId': routeId}
+        lane_url_params.append((lane, url, params))
 
-    rdict = request_dict(url, params)
-
-    count = ['response', 'body', 'totalCount']
-    elem  = ['response', 'body', 'items', 'item']
-
-    info = element_list(count, rdict, elem)
-
-    return info
+    return lane_url_params
 
 
 def store_lane_info(lane, info):
@@ -67,6 +59,11 @@ def store_lane_info(lane, info):
 def do_laneinfo():
     lanes = get_all_lanes_to_request()
 
-    for lane in lanes:
-        info = request_lane_info(lane)
-        store_lane_info(lane, info)
+    l_u_ps = ready_request(lanes)
+
+    lane_rdicts = request_dicts(l_u_ps)
+
+    for lr in lane_rdicts:
+        info = element_list(['response', 'body', 'totalCount'], lr[1],
+                            ['response', 'body', 'items', 'item'])
+        store_lane_info(lr[0], info)

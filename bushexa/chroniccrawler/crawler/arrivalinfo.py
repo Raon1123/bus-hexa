@@ -1,5 +1,5 @@
 from .tools.getkey import get_key
-from .tools.requestor import request_dict
+from .tools.requestor import request_dicts
 from .tools.listifier import element_list
 
 from chroniccrawler.models import UlsanBus_LaneToTrack, UlsanBus_NodeToTrack, UlsanBus_ArrivalInfo
@@ -12,25 +12,20 @@ def get_all_nodes_to_request():
     return nodes
 
 
-# Request bus arrival informations for a node
-def request_arrival_info(node):
+# Ready lists of requests
+def ready_request(nodes):
+    node_url_params = []
     key = get_key()
     nor = '32'
     pn = '1'
-    
     url = 'http://openapi.its.ulsan.kr/UlsanAPI/getBusArrivalInfo.xo'
-
-    params = {'serviceKey': key, 'numOfRows': nor, 'pageNo': pn,
+    for node in nodes:
+        params = {'serviceKey': key, 'numOfRows': nor, 'pageNo': pn,
               'stopid': node.node_id}
 
-    rdict = request_dict(url, params)
+        node_url_params.append((node, url, params))
 
-    count = ['tableInfo', 'totalCnt']
-    elem  = ['tableInfo', 'list', 'row']
-
-    info = element_list(count, rdict, elem)
-
-    return info
+    return node_url_params
 
 
 # Store arrival information
@@ -57,6 +52,10 @@ def store_arrival_info(node, info):
 def do_arrivalinfo():
     nodes = get_all_nodes_to_request()
 
-    for node in nodes:
-        info = request_arrival_info(node)
-        store_arrival_info(node, info)
+    n_u_ps = ready_request(nodes)
+
+    thing_rdicts = request_dicts(n_u_ps)
+
+    for tr in thing_rdicts:
+        info = element_list(['tableInfo', 'totalCnt'], tr[1], ['tableInfo', 'list', 'row'])
+        store_arrival_info(tr[0], info)
