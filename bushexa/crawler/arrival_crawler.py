@@ -5,7 +5,7 @@ import traceback
 
 from timetable.models import ArrivalInfo
 
-from .apitools import get_key
+from .apitools import get_key, parse_xml
 from .consts import error_log_path
 
 def request_arrival(stop_id, page=1, row=10):

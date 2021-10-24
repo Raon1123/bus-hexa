@@ -1,40 +1,70 @@
 {% extends "base.html" %} 
 {% load timetable_extras %}
 
+{% block head %}
+<style>
+    table, thead, tr, th, td, tbody {
+        width: 100%;
+    }
+    thead, tbody, tr {
+        display: block;
+    }
+    table tr {
+        padding-right: 0;
+        padding-left: 0;
+    }
+</style>
+{% endblock head %}
+
 {% block title %}Bus HeXA{% endblock title %}
 
 {% block content %}
 
-{% if stop_name %}
-<p> 정류소명: {{ stop_name }} </p>
-{% else %}
-<p> 정류소가 조회되지 않습니다. </p>
-{% endif %}
-
-<div class="row row-cols-2 row-cols-md-4 g-4">
-{% for bus in bus_info %}
-<div class="col">
-<div class="card">
-    <div class="card-header">{{ bus.bus_name }}</div>
-
-    <ul class="list-group list-group-flush">
-        {% for info in bus.stop_info %}
-        {% if info.remain_time %}
-        <li class="list-group-item"> 남은시간: {{ info.remain_time }} ({{ info.stop_name }})</li>
+<article>
+    <aside>
+        {% if stop_name %}
+        <p> 정류소명: {{ stop_name }} </p>
+        {% else %}
+        <p> 정류소가 조회되지 않습니다. </p>
         {% endif %}
+    </aside>
+    <br />
+</article>
 
-        {% if info.bus_time %}
-        <li class="list-group-item"> {{ info.bus_time }} 출발예정 </li>
-        {% endif %}
-        {% if info.no_data %}
-        <li class="list-group-item"> 더이상 버스가 없습니다. </li>
-        {% endif %}
-        {% endfor%}
-    </ul>
-
-</div>
-</div>
-{% endfor %}
-</div>
+<section>
+    {% for bus in bus_info %}
+    <aside>
+        <section>
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{ bus.bus_name }}</th>
+                    </tr>
+                </thead>
+    
+                {% for info in bus.stop_info %}
+                    {% if info.remain_time %}
+                    <tr>
+                        <td> 남은시간: {{ info.remain_time }} ({{ info.stop_name }})</td>
+                    </tr>
+                    {% endif %}
+    
+                    {% if info.bus_time %}
+                    <tr>
+                        <td> {{ info.bus_time }} 출발예정 </td>
+                    </tr>
+                    {% endif %}
+                    {% if info.no_data %}
+                    <tr>
+                        <td> 더이상 버스가 없습니다. </td>
+                    </tr>
+                    {% endif %}
+                {% endfor%}
+    
+            </table>
+        </section>
+    </aside>
+    {% endfor %}
+</section>
 
 {% endblock content %}

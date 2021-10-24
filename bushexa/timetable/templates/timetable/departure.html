@@ -1,43 +1,56 @@
 {% extends "base.html" %} 
 
+{% block head %}
+<style>
+    table, tr, thead, th, tr {
+        width: 100%;
+    }
+</style>
+{% endblock head %}
+
 {% block title %}Bus HeXA | 실험실{% endblock title %}
 
 {% block content %}
 
-{% if request_time %}
-<p> 현재 시각: {{ request_time }} </p>
-{% else %}
-<p> 시간이 조회되지 않습니다. </p>
-{% endif %}
+<article>
+    <aside>
+        {% if request_time %}
+        <p> 현재 시각: {{ request_time }} </p>
+        {% else %}
+        <p> 시간이 조회되지 않습니다. </p>
+        {% endif %}
+    </aside>
+</article>
 
-<table class="table">
-    <thead>
-        <tr class="table-dark">
-            <th>시간</th>
-            <th>버스번호</th>
-            <th>노선방면</th>
-            <th>노선경유</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% if time_table %}
+<br />
 
-        {% for row in time_table %}
+<section>
+    <table class="table">
+        <thead>
             <tr>
-                <td>{{ row.bus_time }}</td>
-                <td>{{ row.bus_no }}</td>
-                <td>{{ row.bus_dir }}</td>
-                <td>{{ row.bus_via }}</td>
+                <th>시간</th>
+                <th>버스번호</th>
+                <th>노선방면</th>
+                <th>노선경유</th>
             </tr>
-        {% endfor %}
+        </thead>
+        {% if time_table %}
+        
+            {% for row in time_table %}
+                <tr>
+                    <td>{{ row.bus_time }}</td>
+                    <td>{{ row.bus_no }}</td>
+                    <td>{{ row.bus_dir }}</td>
+                    <td>{{ row.bus_via }}</td>
+                </tr>
+            {% endfor %}
 
-    {% else %}
-        <tr>
-            <td colspan="4">시간표가 조회되지 않습니다.</td>
-        </tr>
-    {% endif %}
-
-    </tbody>
-</table>
+        {% else %}
+            <tr>
+                <td colspan="4">시간표가 조회되지 않습니다.</td>
+            </tr>
+        {% endif %}
+    </table>
+</section>
 
 {% endblock content %}

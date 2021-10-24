@@ -5,7 +5,7 @@ from itertools import product
 
 from timetable.models import BusTimetable
 
-from .apitools import get_key
+from .apitools import get_key, parse_xml
 from .consts import error_log_path
 import traceback
 
