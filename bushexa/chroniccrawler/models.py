@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy
 
 
 # Data from 국토교통부
@@ -80,6 +82,7 @@ class UlsanBus_ArrivalInfo(models.Model):
     prev_stop_cnt = models.IntegerField()
     arrival_time = models.IntegerField()
     vehicle_no = models.CharField(max_length=20)
+    current_node_name = models.CharField(max_length=40)
     
 
     def __str__(self):
@@ -109,6 +112,19 @@ class LanePart(models.Model):
                    + self.start_node_key.node_name + " to " + self.end_node_key.node_name
         else:
             return "Lane part " + self.part_name + " is not valid"
+
+    def clean(self):
+        if self.start_node_key.route_key == self.lane_key and self.end_node_key.route_key == self.lane_key:
+            pass
+        else:
+            raise ValidationError(gettext_lazy('At least one of the nodes do not correspond to given lane.')) 
+            # Only able to make valid lane-nodes
+
+    def save(self, *args, **kwargs):
+        if self.start_node_key.route_key == self.lane_key and self.end_node_key.route_key == self.lane_key:
+            return super().save(*args, **kwargs)
+        else:
+            return # Only able to save valid lane-nodes
 
     def valid(self):
         if self.lane_key is not None and self.start_node_key is not None and self.end_node_key is not None:

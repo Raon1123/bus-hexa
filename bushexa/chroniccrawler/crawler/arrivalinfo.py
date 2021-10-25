@@ -44,7 +44,7 @@ def store_arrival_info(node, info):
 
         arrinfo = UlsanBus_ArrivalInfo(route_key_usb=routekey, node_key_usb=node,
                                        prev_stop_cnt=stopcnt, arrival_time=arrivaltime,
-                                       vehicle_no=vehicleno)
+                                       vehicle_no=vehicleno, current_node_name=stopname)
         arrinfo.save()
 
 
