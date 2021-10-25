@@ -18,7 +18,8 @@ class NodeOfLane(models.Model):
     node_name = models.CharField(max_length=40)
 
     def __str__(self):
-        return self.node_id + " - " + self.node_name + ", order " + str(self.node_order)
+        return "Lane " + self.route_key.bus_name + " " + self.node_id + " - " + \
+               self.node_name + ", order " + str(self.node_order)
 
 # Data from 국토교통부
 class PosOfBus(models.Model):
@@ -83,3 +84,40 @@ class UlsanBus_ArrivalInfo(models.Model):
 
     def __str__(self):
         return str(self.prev_stop_cnt) + " stop(s) left, estimated arrival time " + str(self.arrival_time)
+
+
+# Alias for track
+class LaneAlias(models.Model):
+    alias_name = models.CharField(max_length=60)
+
+    def __str__(self):
+        return "Alias " + self.alias_name
+
+# Part for track
+class LanePart(models.Model):
+    alias_key = models.ForeignKey(LaneAlias, null=True, on_delete=models.SET_NULL)
+    lane_key = models.ForeignKey(LaneToTrack, null=True, on_delete=models.SET_NULL)
+    start_node_key = models.ForeignKey(NodeOfLane, null=True, 
+                                       on_delete=models.SET_NULL, related_name='start_set')
+    end_node_key = models.ForeignKey(NodeOfLane, null=True, 
+                                     on_delete=models.SET_NULL, related_name='end_set')
+    part_name = models.CharField(max_length=60)
+    
+    def __str__(self):
+        if self.valid():
+            return "Part " + self.part_name + ", Lane " + self.lane_key.bus_name + ", from " \
+                   + self.start_node_key.node_name + " to " + self.end_node_key.node_name
+        else:
+            return "Lane part " + self.part_name + " is not valid"
+
+    def valid(self):
+        if self.lane_key is not None and self.start_node_key is not None and self.end_node_key is not None:
+            if self.start_node_key.route_key == self.lane_key and self.end_node_key.route_key == self.lane_key:
+                return True
+        return False
+
+    def only_departure(self):
+        if self.start_node_key == self.end_node_key and start_node_key.node_order == 1:
+            return true
+        else:
+            return false
