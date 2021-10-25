@@ -112,5 +112,4 @@ def get_busstop_time(request_stop='196040234'):
             time_things.append({'no_data': 'No_data'})
         ans.append({'bus_name': busname, 'stop_info': time_things[0:2]})
     
-    print(ans)
     return ans
