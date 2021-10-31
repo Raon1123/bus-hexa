@@ -5,6 +5,7 @@ from chroniccrawler.crawler.laneinfo import do_laneinfo
 from chroniccrawler.crawler.timetable_usb import do_timetable
 from chroniccrawler.crawler.buspos import do_buspos
 from chroniccrawler.crawler.arrivalinfo import do_arrivalinfo
+from chroniccrawler.crawler.timed import do_timed
 
 from chroniccrawler.models import DayInfo
 
@@ -27,8 +28,7 @@ class Command(BaseCommand):
             dayinfo = DayInfo.objects.first()
             do_timetable(dayinfo.kind)
         elif options['timed']:
-            do_buspos()
-            do_arrivalinfo()
+            do_timed()
         elif options['date']:
             do_dayinfo()
         elif options['lane']:
