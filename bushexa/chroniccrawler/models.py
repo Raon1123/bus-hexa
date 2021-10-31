@@ -81,7 +81,7 @@ class UlsanBus_ArrivalInfo(models.Model):
     node_key_usb = models.ForeignKey(UlsanBus_NodeToTrack, on_delete=models.CASCADE)
     prev_stop_cnt = models.IntegerField()
     arrival_time = models.IntegerField()
-    vehicle_no = models.CharField(max_length=20)
+    vehicle_no = models.CharField(max_length=20, unique=True)
     current_node_name = models.CharField(max_length=40)
     
 
@@ -132,8 +132,17 @@ class LanePart(models.Model):
                 return True
         return False
 
+    # Check if part is only the start of a lane
     def only_departure(self):
         if self.start_node_key == self.end_node_key and start_node_key.node_order == 1:
-            return true
+            return True
         else:
-            return false
+            return False
+
+    # Check if a bus position is inside the part
+    def in_part(self, buspos):
+        if buspos.route_key == self.lane_key:
+            if self.start_node_key.node_order <= buspos.node_order \
+                and self.end_node_key.node_order > buspos.node_order:
+                return True
+        return False

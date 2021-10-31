@@ -1,3 +1,5 @@
+from django.db import IntegrityError
+
 from .tools.getkey import get_key
 from .tools.requestor import request_dicts
 from .tools.listifier import element_list
@@ -45,7 +47,10 @@ def store_arrival_info(node, info):
         arrinfo = UlsanBus_ArrivalInfo(route_key_usb=routekey, node_key_usb=node,
                                        prev_stop_cnt=stopcnt, arrival_time=arrivaltime,
                                        vehicle_no=vehicleno, current_node_name=stopname)
-        arrinfo.save()
+        try:
+            arrinfo.save()
+        except IntegrityError:
+            pass # ignoring duplicate values
 
 
 # Call this function for getting all arrival informations
