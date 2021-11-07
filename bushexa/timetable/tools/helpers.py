@@ -1,5 +1,6 @@
 from timetable.models import ArrivalInfo, BusTimetable
 from chroniccrawler.models import *
+from chroniccrawler.helper.helper import next_n_bus_from_alias
 import datetime
 
 from .consts import *
@@ -86,30 +87,5 @@ def get_busstop_time(request_stop='196040234'):
     ans = []
     aliases = LaneAlias.objects.all()
     for alias in aliases:
-        time_things = []
-        busname = alias.alias_name
-        parts = LanePart.objects.filter(alias_key=alias)
-        for part in parts:
-            usb = UlsanBus_LaneToTrack.objects.get(route_key=part.lane_key)
-            arrival = UlsanBus_ArrivalInfo.objects.filter(route_key_usb=usb)
-            count = 0
-            if len(arrival) != 0:
-                time_things.append({'remain_time': str(int(int(arrival[0].arrival_time)/60))+'분 후',
-                                    'stop_name': arrival[0].current_node_name})
-                count = count + 1
-            new = UlsanBus_TimeTable.objects.filter(route_key_usb=usb)
-            now = datetime.now()
-            for onetime in new:
-                h = int(onetime.depart_time[0:2])
-                m = int(onetime.depart_time[2:4])
-                if count >= 2:
-                    break
-                if h > now.hour or (h == now.hour and m >= now.minute):
-                    count = count + 1
-                    until = str(((h-now.hour)*60+m-now.minute)*60)
-                    time_things.append({'bus_time': onetime.depart_time[0:2]+':'+onetime.depart_time[2:4]})
-        while len(time_things) < 2:
-            time_things.append({'no_data': 'No_data'})
-        ans.append({'bus_name': busname, 'stop_info': time_things[0:2]})
-    
+        ans.append(next_n_bus_from_alias(alias, 2))
     return ans

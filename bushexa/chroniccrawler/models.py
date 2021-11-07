@@ -134,7 +134,7 @@ class LanePart(models.Model):
 
     # Check if part is only the start of a lane
     def only_departure(self):
-        if self.start_node_key == self.end_node_key and start_node_key.node_order == 1:
+        if self.start_node_key == self.end_node_key and self.start_node_key.node_order == 1:
             return True
         else:
             return False
