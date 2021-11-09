@@ -117,6 +117,22 @@ def get_dispatch_list(parts):
     things = sorted(things, key=lambda d: int(d['dispatch'].depart_time))
     return format_dispatch_list(things)
         
+# Cleanup duplicates inside functions
+def cleanup_arrivals_and_positions(arrs, poss):
+    # Find duplicate entries that are in both arrivals and positions and delete from positions
+    # Fix wrong arrival info : 337 is a ############
+    newarrs = []
+    newposs = []
+    for arr in arrs:
+        nomatch = True
+        for pos in poss:
+            if arr['arrival'].vehicle_no != pos['pos'].bus_num:
+                newposs.append(pos)
+            else:
+                nomatch = False
+        if not nomatch:
+            newarrs.append(arr)
+    return newarrs, newposs# newarrivals, newpositions
 
 # Construct information for next n bus'
 def next_n_bus_from_alias(alias, n):
@@ -132,6 +148,8 @@ def next_n_bus_from_alias(alias, n):
         positions = []
     if dispatches is None:
         dispatches = []
+
+    arrivals, positions = cleanup_arrivals_and_positions(arrivals, positions)
 
     total = arrivals + positions + dispatches
     sort = sorted(total, key=lambda d: d['remain_stops'])
