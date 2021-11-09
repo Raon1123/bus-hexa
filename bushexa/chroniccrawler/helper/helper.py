@@ -36,6 +36,7 @@ def get_arrival_list(parts):
             lanes[a]['arrival'] #lol
         except KeyError:
             popthese.append(a)
+    popthese.reverse()
     for a in popthese:
         lanes.pop(a)
     # format
