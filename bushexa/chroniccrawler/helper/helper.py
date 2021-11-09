@@ -1,5 +1,6 @@
 import sys
 import datetime
+import copy
 from chroniccrawler.models import *
 
 
@@ -108,10 +109,11 @@ def get_dispatch_list(parts):
             if int(dp.depart_time) >= nowformat:
                 ndps.append(dp)
         for dp in ndps:
-            thing = lane
+            thing = copy.deepcopy(lane)
             thing['dispatch'] = dp
             things.append(thing)
     # format
+    things = sorted(things, key=lambda d: int(d['dispatch'].depart_time))
     return format_dispatch_list(things)
         
 
