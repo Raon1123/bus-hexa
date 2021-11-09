@@ -50,6 +50,7 @@ def format_position_list(lanes):
         lane['thing'] = {'remain_time': str(lane['remain_stops']) + '역 전',
                          'stop_name': NodeOfLane.objects.get(route_key=lane['lane'],
                                                              node_order=lane['pos'].node_order).node_name}
+    return lanes
 
 # 2nd : get position part
 def get_position_list(parts):
@@ -64,9 +65,9 @@ def get_position_list(parts):
     poss = PosOfBus.objects.filter(route_key__in=[l['lane'] for l in lanes])
     planes = []
     for lane in lanes:
-        plane = lane
         for pos in poss:
             if lane['lane'] == pos.route_key:
+                plane = copy.deepcopy(lane)
                 plane['pos'] = pos
                 planes.append(plane)
     # filter away position that are out of part
