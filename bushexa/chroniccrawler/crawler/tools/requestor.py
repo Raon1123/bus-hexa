@@ -14,14 +14,16 @@ async def getit(t_u_p):
 
 # Get all
 async def getall(t_u_ps):
-    tasks = [asyncio.create_task(getit(t_u_p)) for t_u_p in t_u_ps]
+    loop = asyncio.get_event_loop()
+    tasks = [loop.create_task(getit(t_u_p)) for t_u_p in t_u_ps]
     thing_responses = await asyncio.gather(*tasks)
 
     return thing_responses
 
 # Returns the response converted into a dictionary
 def request_dicts(t_u_ps):
-    thing_texts = asyncio.run(getall(t_u_ps))
+    loop = asyncio.get_event_loop()
+    thing_texts = loop.run_until_complete(getall(t_u_ps))
 
     thing_rdicts = []
 

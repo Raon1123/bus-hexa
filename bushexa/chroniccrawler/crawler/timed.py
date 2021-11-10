@@ -8,8 +8,9 @@ import chroniccrawler.crawler.tools.requestor as rq
 import chroniccrawler.crawler.tools.listifier as ls
 
 async def getreallyall(l_u_ps, n_u_ps):
-    l_tasks = [asyncio.create_task(rq.getit(l_u_p)) for l_u_p in l_u_ps]
-    n_tasks = [asyncio.create_task(rq.getit(n_u_p)) for n_u_p in n_u_ps]
+    loop = asyncio.get_event_loop()
+    l_tasks = [loop.create_task(rq.getit(l_u_p)) for l_u_p in l_u_ps]
+    n_tasks = [loop.create_task(rq.getit(n_u_p)) for n_u_p in n_u_ps]
 
     l_resps = await asyncio.gather(*l_tasks)
     n_resps = await asyncio.gather(*n_tasks)
@@ -23,7 +24,8 @@ def do_timed():
     l_u_ps = buspos.ready_request(lanes)
     n_u_ps = arrival.ready_request(nodes)
 
-    l_resps, n_resps = asyncio.run(getreallyall(l_u_ps, n_u_ps))
+    loop = asyncio.get_event_loop()
+    l_resps, n_resps = loop.run_until_complete(getreallyall(l_u_ps, n_u_ps))
 
     l_rdicts = []
     n_rdicts = []
