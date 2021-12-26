@@ -48,13 +48,13 @@
                 {% for info in bus.stop_info %}
                     {% if info.remain_time %}
                     <tr>
-                        <td> 남은시간: {{ info.remain_time }} ({{ info.stop_name }})</td>
+                        <td>&#x1f68c; {{ info.remain_time }} ({{ info.stop_name }})</td>
                     </tr>
                     {% endif %}
     
                     {% if info.bus_time %}
                     <tr>
-                        <td> {{ info.bus_time }} 출발예정 </td>
+                        <td>&#128338; {{ info.bus_time }} 출발예정 </td>
                     </tr>
                     {% endif %}
                     {% if info.no_data %}
