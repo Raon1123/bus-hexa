@@ -1,4 +1,7 @@
 from timetable.models import ArrivalInfo, BusTimetable
+from chroniccrawler.models import *
+from chroniccrawler.helper.helper import next_n_bus_from_alias
+import datetime
 
 from .consts import *
 from .tools import *
@@ -81,13 +84,8 @@ def get_bus_arrivaltime(bus_no, dir):
 정류소에 정차하는 버스 탐색
 """
 def get_busstop_time(request_stop='196040234'):
-    bus_list = get_bus_list(request_stop)
-
     ans = []
-
-    for bus_no, direction in bus_list:
-        stop_dict = get_bus_arrivaltime(bus_no, direction)
-
-        ans.append(stop_dict)
-
+    aliases = LaneAlias.objects.all()
+    for alias in aliases:
+        ans.append(next_n_bus_from_alias(alias, 2))
     return ans
