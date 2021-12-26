@@ -146,3 +146,40 @@ class LanePart(models.Model):
                 and self.end_node_key.node_order > buspos.node_order:
                 return True
         return False
+
+
+# New part / alias system from here
+
+class PartOfLane(models.Model):
+    lane_key = models.ForeignKey(LaneToTrack, on_delete=models.CASCADE)
+    first_node_key = models.ForeignKey(NodeOfLane, on_delete=models.CASCADE, related_name="fnk")
+    last_node_key = models.ForeignKey(NodeOfLane, on_delete=models.CASCADE, related_name="lnk")
+    part_name = models.CharField(max_length=60)
+    count = models.IntegerField()
+
+    def __str__(self):
+        return self.part_name
+
+    def only_departure(self):
+        if self.first_node_key == self.last_node_key and self.first_node_key.node_order == 1:
+            return True
+        else:
+            return False
+
+    def in_part(self, buspos):
+        if buspos.route_key == self.lane_key:
+            if self.first_node_key.node_order <= buspos.node_order \
+                and self.last_node_key.node_order > buspos.node_order:
+                return True
+        return False
+
+
+class MapToAlias(models.Model):
+    lane_key = models.ForeignKey(LaneToTrack, on_delete=models.CASCADE)
+    count = models.IntegerField()
+    alias_key = models.ForeignKey(LaneAlias, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Map count " + str(self.count) + " of " + self.lane_key.route_id + " to " + self.alias_key.alias_name
+
+
