@@ -39,6 +39,9 @@
                 <thead>
                     <tr>
                         <th>{{ bus.bus_name }}</th>
+                        {% if bus.stop_info.0.vehicle_no %}
+                            <td>{{ bus.stop_info.0.vehicle_no }}</td>
+                        {% endif %}
                     </tr>
                 </thead>
     
