@@ -47,7 +47,7 @@ def get_arrival_list(parts):
 def format_position_list(lanes):
     # add format and position
     for lane in lanes:
-        lane['remain_stops'] = lane['part'].end_node_key.node_order - lane['pos'].node_order
+        lane['remain_stops'] = lane['part'].last_node_key.node_order - lane['pos'].node_order
         lane['thing'] = {'remain_time': str(lane['remain_stops']) + '역 전',
                          'stop_name': NodeOfLane.objects.get(route_key=lane['lane'],
                                                              node_order=lane['pos'].node_order).node_name}
@@ -138,7 +138,21 @@ def cleanup_arrivals_and_positions(arrs, poss):
 # Construct information for next n bus'
 def next_n_bus_from_alias(alias, n):
     count = n
-    parts = LanePart.objects.filter(alias_key=alias)
+
+    maps = MapToAlias.objects.filter(alias_key=alias)
+    parts = []
+    for m in maps:
+        lane = m.lane_key
+        count = m.count
+        part = None
+        try:
+            part = PartOfLane.objects.get(lane_key=lane, count=count)
+        except:
+            continue
+        else:
+            if part is not None:
+                parts.append(part)
+
     arrivals = get_arrival_list(parts)
     positions = get_position_list(parts)
     dispatches = get_dispatch_list(parts)

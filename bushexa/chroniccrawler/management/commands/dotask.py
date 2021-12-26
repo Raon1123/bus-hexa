@@ -6,6 +6,7 @@ from chroniccrawler.crawler.timetable_usb import do_timetable
 from chroniccrawler.crawler.buspos import do_buspos
 from chroniccrawler.crawler.arrivalinfo import do_arrivalinfo
 from chroniccrawler.crawler.timed import do_timed
+from chroniccrawler.crawler.autopart import do_lanepart
 
 from chroniccrawler.models import DayInfo
 
@@ -20,6 +21,7 @@ class Command(BaseCommand):
         parser.add_argument('--date', action='store_true', help='test : do date related tasks')
         parser.add_argument('--lane', action='store_true', help='test : do lane related tasks')
         parser.add_argument('--timetable', action='store_true', help='test : do timetable related tasks')
+        parser.add_argument('--autopart', action='store_true', help='test : do autopart of lanes')
 
     def handle(self, *args, **options):
         if options['daily']:
@@ -27,6 +29,7 @@ class Command(BaseCommand):
             do_laneinfo()
             dayinfo = DayInfo.objects.first()
             do_timetable(dayinfo.kind)
+            do_lanepart()
         elif options['timed']:
             do_timed()
         elif options['date']:
@@ -40,3 +43,5 @@ class Command(BaseCommand):
             do_buspos()
         elif options['arrival']:
             do_arrivalinfo()
+        elif options['autopart']:
+            do_lanepart()
