@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    form, select, label, input, a, button {
+        display: inline-block;
+    }
+    form {
+        border: none;
+        border-radius: none;
+        box-shadow: none;
+        padding: 0;
+    }
+    button {
+        font-weight: normal;
+        padding: 0rem 0.2rem;
+        background-color: gainsboro;
+        border: none;
+    }
+    input, select {
+        padding: 0.1rem 0.2rem;
+    }
+    table , thead, th, tr, td {
+        width: 100%
+    }
+</style>
+{% endblock %}
+
+{% block title %}Bus HeXA | 실험실{% endblock %}
+
+{% block content %}
+<article>
+    <aside>
+        <form method="get">
+            {{ form }}
+            <input type="submit" value="Go">
+            <a href="/departure_by_time/"><button type="button">Now</button></a>
+        </form>
+    </aside>
+<article>
+
+<br/>
+
+<section>
+    <table class="table">
+        <thead>
+            <tr class="norm">
+                <th class="norm">시간</th>
+                <th class="norm">버스명</th>
+            </tr>
+        </thead>
+        {% if departs %}
+            {% for dep in departs %}
+                <tr class="norm">
+                    <td class="norm">{{ dep.0 }}:{{ dep.1 }}</td>
+                    <td class="norm">{{ dep.2.route_key_usb.route_key.bus_name }}</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+    </table>
+</section>
+
+{% endblock %}
