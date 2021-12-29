@@ -5,9 +5,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="{% static 'src/styles.css' %}"> -->
     <link rel="stylesheet" href="https://unpkg.com/mvp.css">
-    <script src="https://unpkg.com/petite-vue" defer></script>
+    <link rel="stylesheet" href="{% static 'src/styles.css' %}">
+    <script type="module">
+        import { createApp } from 'https://unpkg.com/petite-vue?module'
+        createApp({
+            $delimiters: ['${', '}'],
+        }).mount()
+      </script>
     {% block head %}{% endblock head %}
 
     <title>

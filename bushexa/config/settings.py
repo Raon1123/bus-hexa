@@ -84,14 +84,23 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'chroniccrawler',
+#         'USER': 'chroniccrawler',
+#         'PASSWORD': 'chroniccrawler',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
+
+# SQLite3 database for development
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chroniccrawler',
-        'USER': 'chroniccrawler',
-        'PASSWORD': 'chroniccrawler',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
     }
 }
 
