@@ -1,19 +1,11 @@
 {% extends "base.html" %} 
 {% load timetable_extras %}
+{% load static %}
 
 {% block head %}
-<style>
-    table, thead, tr, th, td, tbody {
-        width: 100%;
-    }
-    thead, tbody, tr {
-        display: block;
-    }
-    table tr {
-        padding-right: 0;
-        padding-left: 0;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'src/css/busno.css' %}">
+<script type="module" src="{% static 'src/js/busno.vue-registry.js' %}"></script>
+
 {% endblock head %}
 
 {% block title %}Bus HeXA{% endblock title %}
