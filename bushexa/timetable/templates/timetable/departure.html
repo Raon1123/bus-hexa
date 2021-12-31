@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="{% static 'src/css/departure.css' %}">
 <script type="module" src="{% static 'src/js/departure.vue-registry.js' %}"></script>
 <script src="{% static 'src/js/edit-time-form.js' %}"></script>
+<script src="{% static 'src/js/material-input.js' %}"></script>
+<script src="{% static 'src/js/text-button.js' %}"></script>
 {% endblock head %}
 
 {% block title %}Bus HeXA | 실험실{% endblock title %}
@@ -20,7 +22,11 @@
         {% endif %}
     </aside>
     <aside style="display: none;" v-effect="$el.style.display = onEditTime ? 'block' : 'none'">
-        <edit-time-form v-on:submit.prevent="filterRows"></edit-time-form>
+        <form v-on:submit.prevent="filterRows">
+            <material-input id="hours" type="number" name="hours" min="0" max="24" label="Hours" required></material-input>
+            <material-input id="minutes" type="number" name="minutes" min="0" max="60" label="Minutes" required></material-input>
+            <text-button @click="onEditTime=!onEditTime" label="시간 변경"></text-button>
+        </form>
     </aside>
 </article>
 
