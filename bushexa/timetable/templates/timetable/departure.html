@@ -4,7 +4,7 @@
 {% block head %}
 <link rel="stylesheet" href="{% static 'src/css/departure.css' %}">
 <script type="module" src="{% static 'src/js/departure.vue-registry.js' %}"></script>
-<script src="{% static 'src/js/edit-time-form.js' %}"></script>
+<script src="{% static 'src/js/plain-form.js' %}"></script>
 <script src="{% static 'src/js/material-input.js' %}"></script>
 <script src="{% static 'src/js/text-button.js' %}"></script>
 {% endblock head %}
@@ -16,17 +16,22 @@
 <article v-scope>
     <aside v-if="!onEditTime">
         {% if request_time %}
-        <p id="currentTime"> 현재 시각: {{ request_time }} <a @click="onEditTime=!onEditTime">시간 변경</a> </p>
+        <p id="currentTime"> 현재 시각: ${ !!selectedTime ? selectedTime : {{ request_time }} } <a @click="onEditTime=!onEditTime">시간 변경</a> </p>
         {% else %}
         <p> 시간이 조회되지 않습니다. </p>
         {% endif %}
     </aside>
     <aside style="display: none;" v-effect="$el.style.display = onEditTime ? 'block' : 'none'">
-        <form v-on:submit.prevent="filterRows">
+        <!-- 
+            ** TODO **
+            <plain-form id="edit-time-form" v-on:submit.prevent="filterRows"> 
+            여기서 v-on:submit.prevent를 shadowRoot안에 있는 form으로 넘길 수 있어야 합니다.
+                -->
+        <plain-form id="edit-time-form">
             <material-input id="hours" type="number" name="hours" min="0" max="24" label="Hours" required></material-input>
             <material-input id="minutes" type="number" name="minutes" min="0" max="60" label="Minutes" required></material-input>
-            <text-button @click="onEditTime=!onEditTime" label="시간 변경"></text-button>
-        </form>
+            <text-button v-on:click="filterRows" label="시간 변경"></text-button>
+        </plain-form>
     </aside>
 </article>
 
