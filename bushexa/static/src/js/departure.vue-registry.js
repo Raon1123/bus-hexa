@@ -11,13 +11,19 @@ createApp({
     toggleOnEditTime() {
         this.onEditTime = !this.onEditTime;
     },
+    currentTime: null,
     /**
      * 
-     * @type {string}
-     * @description 'loading...'은 initializing value입니다
-     *              @type {string}은 시간을 의미합니다.
+     * @param {string} time
      */
-    selectedTime: 'Loading...',
+    setCurrentTime(time) {
+        this.currentTime = time;
+    },
+    /**
+     * 
+     * @type {string | null}
+     */
+    selectedTime: null,
     /**
      * 
      * @param {[number, number] | string} time
@@ -27,8 +33,8 @@ createApp({
         if (typeof time === 'string') {
             this.selectedTime = time;
         } else {
-            const [hrs, min] = time.map(value => value < 10 ? `0${value}` : value);
-            this.selectedTime = `${hrs}:${min}`
+            const [hrs, min] = time.map(value => value < 10 ? `0${value}` : value.toString());
+            this.selectedTime = `${hrs}:${min}`;
         }
     },
     /**
