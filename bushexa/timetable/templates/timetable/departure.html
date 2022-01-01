@@ -16,7 +16,8 @@
 <article v-scope>
     <aside v-if="!onEditTime">
         {% if request_time %}
-        <p id="currentTime"> 현재 시각: ${ !!selectedTime ? selectedTime : {{ request_time }} } <a @click="onEditTime=!onEditTime">시간 변경</a> </p>
+        <span style="display: none;" @vue:mounted="setSelectedTime($el.innerText)">{{ request_time }}</span>
+        <p id="currentTime"> 현재 시각: ${ selectedTime } <a @click="toggleOnEditTime()">시간 변경</a> </p>
         {% else %}
         <p> 시간이 조회되지 않습니다. </p>
         {% endif %}

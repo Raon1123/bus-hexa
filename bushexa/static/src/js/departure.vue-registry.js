@@ -13,25 +13,31 @@ createApp({
     },
     /**
      * 
-     * @type {string | null}
-     * @description 시간이 선택되지 않았을 경우 @type {null}, 
-     *              선택되었을 경우 @type {string}입니다.
-     *              후자일시에 0번 인덱스의 요소는 시(Hours), 1번 인덱스의 요소는 분(Minutes)입니다.
+     * @type {string}
+     * @description 'loading...'은 initializing value입니다
+     *              @type {string}은 시간을 의미합니다.
      */
-    selectedTime: null,
+    selectedTime: 'Loading...',
     /**
      * 
-     * @param {[number, number] | null} time
-     * @description @property {[number, number] | null} selectedTime 의 setter입니다.
+     * @param {[number, number] | string} time
+     * @description @type {[number, number]}일 경우에는 [0]을 시, [1]을 분으로 가정하고 이를 ':'로 구분하여 문자화합니다.
      */
     setSelectedTime(time) {
-        if (time) {
-            const [hrs, min] = time.map(value => value < 10 ? `0${value}` : value.toString());
-            this.selectedTime = `${hrs}:${min}`
-        } else {
+        if (typeof time === 'string') {
             this.selectedTime = time;
+        } else {
+            const [hrs, min] = time.map(value => value < 10 ? `0${value}` : value);
+            this.selectedTime = `${hrs}:${min}`
         }
     },
+    /**
+     * 
+     * @description 유저가 #edit-time-form에서 입력한 시간 (시, 분)의 값을 읽고,
+     *              각 배차시간 행들의 출발시간을 읽은 뒤,
+     *              이를 유저가 입력한 시간과 비교합니다.
+     *              입력한 시간보다 출발시간이 빠르지 않은 행만 표시합니다.
+     */
     filterRows() {
         const getInputValueById = (id) => 
             document
@@ -55,8 +61,7 @@ createApp({
                     .replace(' ', '')
                     .split(':')
                     .map(time => time.charAt(0) === '0' ? time.charAt(1) : time)
-                    .map(time => Number(time))
-                console.log({hrs, min, currentHrs, currentMin})
+                    .map(time => Number(time));
                 if (hrs > currentHrs || (hrs === currentHrs && min >= currentMin)) {
                     row.removeAttribute('style')
                 } else {
@@ -65,7 +70,7 @@ createApp({
             }
         )
         this.setSelectedTime([currentHrs, currentMin]);
-        this.onEditTime = !this.onEditTime;
+        this.toggleOnEditTime();
     }
 }).mount()
 
