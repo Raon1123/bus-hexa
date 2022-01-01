@@ -10,7 +10,8 @@ def format_arrival_list(lanes):
     for lane in lanes:
         lane['remain_stops'] = lane['arrival'].prev_stop_cnt
         lane['thing'] = {'remain_time': str(lane['arrival'].arrival_time // 60) + '분 후',
-                         'stop_name': lane['arrival'].current_node_name}
+                         'stop_name': lane['arrival'].current_node_name,
+                         'vehicle_no': lane['arrival'].vehicle_no[2:]}
     return lanes
 
 # 1st : get arrival part
@@ -50,7 +51,8 @@ def format_position_list(lanes):
         lane['remain_stops'] = lane['part'].last_node_key.node_order - lane['pos'].node_order
         lane['thing'] = {'remain_time': str(lane['remain_stops']) + '역 전',
                          'stop_name': NodeOfLane.objects.get(route_key=lane['lane'],
-                                                             node_order=lane['pos'].node_order).node_name}
+                                                             node_order=lane['pos'].node_order).node_name,
+                         'vehicle_no': lane['pos'].bus_num[2:]}
     return lanes
 
 # 2nd : get position part
