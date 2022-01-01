@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="{% static 'src/styles.css' %}"> -->
     <link rel="stylesheet" href="https://unpkg.com/mvp.css">
-    <script src="https://unpkg.com/petite-vue" defer></script>
+    <link rel="stylesheet" href="{% static 'src/css/styles.css' %}">
+    <script src="{% static 'src/js/global.js' %}"></script>
     {% block head %}{% endblock head %}
 
     <title>
@@ -18,7 +18,7 @@
 
     {% include "partials/header.html" %}
     
-    <main>
+    <main style="padding:0">
         {% block content %}{% endblock content %}
         {% include "partials/footer.html" %}
     </main>

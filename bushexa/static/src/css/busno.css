@@ -1,0 +1,10 @@
+table, thead, tr, th, td, tbody {
+    width: 100%;
+}
+thead, tbody, tr {
+    display: block;
+}
+table tr {
+    padding-right: 0;
+    padding-left: 0;
+}
