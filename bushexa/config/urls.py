@@ -18,7 +18,6 @@ from django.urls import include, path
 
 urlpatterns = [
     path('', include('timetable.urls')),
-    path('', include('departure.urls')),
     path('chroniccrawler/', include('chroniccrawler.urls')),
     path('master/', admin.site.urls),
 ]
