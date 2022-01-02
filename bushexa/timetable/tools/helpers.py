@@ -23,7 +23,7 @@ def get_bustime(request_time):
         #if hour > now.hour or (hour == now.hour and minute >= now.minute):
         time_dict = {"bus_no": tt.route_key_usb.route_num,
                          "bus_time": tt.depart_time[:2]+":"+tt.depart_time[2:],
-                         "bus_dir": "placeholder",
+                         "bus_dir": tt.route_key_usb.route_key.bus_name.split('(')[1][:-1],
                          "bus_via": "placeholder"}
         bus_time.append(time_dict)
 
