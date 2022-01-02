@@ -55,7 +55,7 @@ Windows VS Code를 통해 진행된다면 표시되는 주소를 `Ctrl`키와 �
 
 ## 사용법
 
-[Chroniccrawler 사용 방법](readme_cc.md)
+[Chroniccrawler 사용 방법](chroniccrawler/readme_cc.md)
 
 ## 배포하기에 앞서
 
