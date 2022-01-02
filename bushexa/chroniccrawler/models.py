@@ -96,60 +96,8 @@ class LaneAlias(models.Model):
     def __str__(self):
         return "Alias " + self.alias_name
 
-# Part for track
-class LanePart(models.Model):
-    alias_key = models.ForeignKey(LaneAlias, null=True, on_delete=models.SET_NULL)
-    lane_key = models.ForeignKey(LaneToTrack, null=True, on_delete=models.SET_NULL)
-    start_node_key = models.ForeignKey(NodeOfLane, null=True, 
-                                       on_delete=models.SET_NULL, related_name='start_set')
-    end_node_key = models.ForeignKey(NodeOfLane, null=True, 
-                                     on_delete=models.SET_NULL, related_name='end_set')
-    part_name = models.CharField(max_length=60)
-    
-    def __str__(self):
-        if self.valid():
-            return "Part " + self.part_name + ", Lane " + self.lane_key.bus_name + ", from " \
-                   + self.start_node_key.node_name + " to " + self.end_node_key.node_name
-        else:
-            return "Lane part " + self.part_name + " is not valid"
 
-    def clean(self):
-        if self.start_node_key.route_key == self.lane_key and self.end_node_key.route_key == self.lane_key:
-            pass
-        else:
-            raise ValidationError(gettext_lazy('At least one of the nodes do not correspond to given lane.')) 
-            # Only able to make valid lane-nodes
-
-    def save(self, *args, **kwargs):
-        if self.start_node_key.route_key == self.lane_key and self.end_node_key.route_key == self.lane_key:
-            return super().save(*args, **kwargs)
-        else:
-            return # Only able to save valid lane-nodes
-
-    def valid(self):
-        if self.lane_key is not None and self.start_node_key is not None and self.end_node_key is not None:
-            if self.start_node_key.route_key == self.lane_key and self.end_node_key.route_key == self.lane_key:
-                return True
-        return False
-
-    # Check if part is only the start of a lane
-    def only_departure(self):
-        if self.start_node_key == self.end_node_key and self.start_node_key.node_order == 1:
-            return True
-        else:
-            return False
-
-    # Check if a bus position is inside the part
-    def in_part(self, buspos):
-        if buspos.route_key == self.lane_key:
-            if self.start_node_key.node_order <= buspos.node_order \
-                and self.end_node_key.node_order > buspos.node_order:
-                return True
-        return False
-
-
-# New part / alias system from here
-
+# Part for lanes
 class PartOfLane(models.Model):
     lane_key = models.ForeignKey(LaneToTrack, on_delete=models.CASCADE)
     first_node_key = models.ForeignKey(NodeOfLane, on_delete=models.CASCADE, related_name="fnk")
@@ -174,6 +122,7 @@ class PartOfLane(models.Model):
         return False
 
 
+# Map each part of lane to alias
 class MapToAlias(models.Model):
     lane_key = models.ForeignKey(LaneToTrack, on_delete=models.CASCADE)
     count = models.IntegerField()

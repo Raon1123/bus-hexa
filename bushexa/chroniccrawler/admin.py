@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import LaneToTrack, UlsanBus_LaneToTrack, NodeOfLane, PosOfBus, UlsanBus_TimeTable, DayInfo, UlsanBus_NodeToTrack, UlsanBus_ArrivalInfo, LaneAlias, LanePart, PartOfLane, MapToAlias
+from .models import LaneToTrack, UlsanBus_LaneToTrack, NodeOfLane, PosOfBus, UlsanBus_TimeTable, DayInfo, UlsanBus_NodeToTrack, UlsanBus_ArrivalInfo, LaneAlias, PartOfLane, MapToAlias
 
 admin.site.register(LaneToTrack)
 admin.site.register(NodeOfLane)

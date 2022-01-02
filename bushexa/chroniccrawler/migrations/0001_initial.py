@@ -119,15 +119,4 @@ class Migration(migrations.Migration):
                 ('lane_key', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='chroniccrawler.lanetotrack')),
             ],
         ),
-        migrations.CreateModel(
-            name='LanePart',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('part_name', models.CharField(max_length=60)),
-                ('alias_key', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='chroniccrawler.lanealias')),
-                ('end_node_key', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='end_set', to='chroniccrawler.nodeoflane')),
-                ('lane_key', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='chroniccrawler.lanetotrack')),
-                ('start_node_key', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='start_set', to='chroniccrawler.nodeoflane')),
-            ],
-        ),
     ]
