@@ -20,11 +20,16 @@ def get_bustime(request_time):
     for tt in timetables:
         hour = int(tt.depart_time[:2])
         minute = int(tt.depart_time[2:])
+        route_key = tt.route_key_usb.route_key
+        try:
+            bus_via = LandmarkOfLane.objects.get(route_key=route_key).get_passing_landmarks()
+        except:
+            bus_via = "Placeholder"
         #if hour > now.hour or (hour == now.hour and minute >= now.minute):
         time_dict = {"bus_no": tt.route_key_usb.route_num,
                          "bus_time": tt.depart_time[:2]+":"+tt.depart_time[2:],
                          "bus_dir": tt.route_key_usb.route_key.bus_name.split('(')[1][:-1],
-                         "bus_via": "placeholder"}
+                         "bus_via": bus_via}
         bus_time.append(time_dict)
 
     #new_bus_time = sorted(bus_time, key=lambda e)

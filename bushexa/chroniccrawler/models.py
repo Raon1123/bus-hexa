@@ -132,3 +132,33 @@ class MapToAlias(models.Model):
         return "Map count " + str(self.count) + " of " + self.lane_key.route_id + " to " + self.alias_key.alias_name
 
 
+# Alias for landmarks
+class LandmarkAlias(models.Model):
+    alias_name = models.CharField(max_length=40)
+
+    def __str__(self):
+        return "Alias " + self.alias_name
+
+
+# One of stations of landmarks
+class LandmarkNode(models.Model):
+    alias_key = models.ForeignKey(LandmarkAlias, on_delete=models.CASCADE)
+    node_id = models.CharField(max_length=20)
+
+    def __str__(self):
+        return "Node " + self.node_id + " mapped to " + self.alias_key.alias_name
+
+
+# Store Landmarks of each lane
+class LandmarkOfLane(models.Model):
+    route_key = models.ForeignKey(LaneToTrack, on_delete=models.CASCADE)
+    landmark_keys = models.ManyToManyField(LandmarkNode)
+
+    def __str__(self):
+        return self.route_key.route_id + " passes " + str(self.landmark_keys.count()) + " landmark(s)."
+
+    def get_passing_landmarks(self):
+        landmark_aliass = set(lmk.alias_key.alias_name for lmk in self.landmark_keys.all())
+        return ", ".join(landmark_aliass)
+            
+
