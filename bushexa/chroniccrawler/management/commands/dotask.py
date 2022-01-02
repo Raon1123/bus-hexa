@@ -32,6 +32,7 @@ class Command(BaseCommand):
             dayinfo = DayInfo.objects.first()
             do_timetable(dayinfo.kind)
             do_lanepart()
+            do_landmark()
         elif options['timed']:
             do_timed()
         elif options['date']:
