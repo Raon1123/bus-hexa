@@ -143,6 +143,7 @@ def next_n_bus_from_alias(alias, n):
 
     maps = MapToAlias.objects.filter(alias_key=alias)
     parts = []
+    only_departure = True
     for m in maps:
         lane = m.lane_key
         count = m.count
@@ -152,6 +153,7 @@ def next_n_bus_from_alias(alias, n):
         except:
             continue
         else:
+            only_departure = only_departure and part.only_departure()
             if part is not None:
                 parts.append(part)
 
@@ -174,5 +176,5 @@ def next_n_bus_from_alias(alias, n):
         sort.append({'thing': {'no_data': 'No_data'}})
     nextn = [s['thing'] for s in sort[0:n]]
     
-    ret = {'bus_name': alias.alias_name, 'stop_info': nextn}
+    ret = {'bus_name': alias.alias_name, 'stop_info': nextn, 'only_departure': only_departure}
     return ret
