@@ -68,6 +68,8 @@ python3 manage.py createsuperuser
  - Ulsan bus_ node to tracks
  - Lane aliass
  - Map to aliass
+ - Landmark aliass
+ - Landmark nodes
 에 직접 정보를 등록해야 합니다.
 
 우선, Lane to tracks에 bus name, route id, city code란에 국토교통부 api상의 해당 노선의 정보를 등록해주세요.
@@ -99,6 +101,12 @@ Alias key: "어느 Lane alias에 매핑할 것인지"
 3) 어느 버스 노선은 출발역이 홍길동역이며 그 이후 김철수역을 지나고 그 이후 다시 홍길동역을 지난 후 종착역이 김철수역입니다. 이 경우에, 출발역~ 출발역의 Count는 0, 출발역~ 첫번째 김철수역의 Count는 1, 출발역~ 두번째 홍길동역의 Count는 2이며, 출발역~ 종착역의 경우에는 등록되지 않으니 Count 3으로 Map to aliass에 등록하더라도 영향을 미치지 않습니다.
 
 ###### 예시 끝
+
+에 따라 등록해주세요.
+
+그 후, Landmark aliass에는 버스가 지나는 역 중 중요하며 경유역으로 표시하고 싶은 위치의 이름을 입력하고, Landmark nodes에 각 위치에 해당하는 역의 id를 모두 입력하세요.
+
+이후 밑에서 설명하는 작업 실행하기를 시행하면 나머지 DB는 알아서 채워집니다.
 
 ### 기능 : 매일 해야 할 작업 실행하기
 
