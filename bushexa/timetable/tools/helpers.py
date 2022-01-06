@@ -11,26 +11,29 @@ from .tools import *
 시간 순으로 버스 목록 표출
 """
 def get_bustime(request_time):
-    if type(request_time) is not str:
-        request_time = str(request_time)
-
-    buses = get_bus_list()
-    week = get_week()
+    timetables = UlsanBus_TimeTable.objects.all()
 
     bus_time = []
 
-    for bus_no, dir in buses:
-        times = BusTimetable.objects.filter(bus_no__exact=bus_no,
-                                            bus_dir__exact=dir,
-                                            bus_week=week,
-                                            bus_time__gte=request_time)[:2]
-        for time in times:
-            time_dict = {"bus_no": bus_no, 
-                         "bus_time": pretty_time(time.bus_time),
-                         "bus_dir": get_bus_dir(bus_no, dir),
-                         "bus_via": get_bus_via(bus_no, dir)}
-            bus_time.append(time_dict)
-    
+    now = datetime.now()
+
+    for tt in timetables:
+        hour = int(tt.depart_time[:2])
+        minute = int(tt.depart_time[2:])
+        route_key = tt.route_key_usb.route_key
+        try:
+            bus_via = LandmarkOfLane.objects.get(route_key=route_key).get_passing_landmarks()
+        except:
+            bus_via = "Placeholder"
+        #if hour > now.hour or (hour == now.hour and minute >= now.minute):
+        time_dict = {"bus_no": tt.route_key_usb.route_num,
+                         "bus_time": tt.depart_time[:2]+":"+tt.depart_time[2:],
+                         "bus_dir": tt.route_key_usb.route_key.bus_name.split('(')[1][:-1],
+                         "bus_via": bus_via}
+        bus_time.append(time_dict)
+
+    #new_bus_time = sorted(bus_time, key=lambda e)
+
     return bus_time
 
 
