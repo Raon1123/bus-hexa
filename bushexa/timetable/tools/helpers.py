@@ -13,19 +13,27 @@ from .tools import *
 def get_bustime(request_time):
     timetables = UlsanBus_TimeTable.objects.all().select_related("route_key_usb__route_key")
 
-    lmols = LandmarkOfLane.objects.all().prefetch_related("landmark_keys").select_related("landmark_keys__alias_key")
+    lmols = LandmarkOfLane.objects.all().prefetch_related("landmark_keys__alias_key")
 
     bus_time = []
+
+    route_key_to_text = {}
 
     for tt in timetables:
         hour = int(tt.depart_time[:2])
         minute = int(tt.depart_time[2:])
+
         route_key = tt.route_key_usb.route_key
-        try:
-            lmks = lmols.get(route_key=route_key).landmark_keys.all()
-            bus_via = ", ".join(set(lmk.alias_key.alias_name for lmk in lmks))
-        except:
-            bus_via = "Placeholder"
+
+        bus_via = route_key_to_text.get(route_key)
+        if bus_via is None:
+            try:
+                lmks = lmols.get(route_key=route_key).landmark_keys.all()
+                bus_via = ", ".join(set(lmk.alias_key.alias_name for lmk in lmks))
+                route_key_to_text[route_key] = bus_via
+            except:
+                bus_via = "Placeholder"
+                route_key_to_text[route_key] = bus_via
         #if hour > now.hour or (hour == now.hour and minute >= now.minute):
         time_dict = {"bus_no": tt.route_key_usb.route_num,
                          "bus_time": tt.depart_time[:2]+":"+tt.depart_time[2:],
