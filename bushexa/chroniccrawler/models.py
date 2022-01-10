@@ -65,7 +65,7 @@ class UlsanBus_TimeTable(models.Model):
     depart_seq = models.IntegerField()
 
     def __str__(self):
-        return self.route_key_usb.route_key.bus_name + " number " + str(self.depart_seq) + " departing on " + self.depart_time
+        return "Number " + str(self.depart_seq) + " departing on " + self.depart_time
 
 # Data from 울산광역시 BIS
 class UlsanBus_NodeToTrack(models.Model):
@@ -157,8 +157,11 @@ class LandmarkOfLane(models.Model):
     def __str__(self):
         return self.route_key.route_id + " passes " + str(self.landmark_keys.count()) + " landmark(s)."
 
+    # For performance, do not use this function from here
+    # Implement it in place using querysets pre-loaded with 
+    # select_related() and prefetch_related() function
     def get_passing_landmarks(self):
-        landmark_aliass = set(lmk.alias_key.alias_name for lmk in self.landmark_keys.all())
+        landmark_aliass = set(lmk.alias_key.alias_name for lmk in self.landmark_keys.all().select_related('alias_key'))
         return ", ".join(landmark_aliass)
             
 
