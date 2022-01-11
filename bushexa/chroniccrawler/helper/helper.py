@@ -138,7 +138,7 @@ def next_n_bus_from_alias(alias, n):
                                     lane_key_id=OuterRef('lane_key_id'), count=OuterRef('count'), alias_key=alias
                             )
                     )
-            ).select_related('lane_key')
+            ).select_related('lane_key', 'first_node_key', 'last_node_key')
     
     only_departure = True
     for p in parts:
