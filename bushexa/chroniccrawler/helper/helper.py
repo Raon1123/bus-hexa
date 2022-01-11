@@ -85,14 +85,6 @@ def get_position_list(parts):
     return format_position_list(nlanes)
 
 
-# format 3rd
-def format_dispatch_list(things):
-    # add format and info
-    for thing in things:
-        thing['remain_stops'] = sys.maxsize
-        thing['thing'] = {'bus_time': thing['dispatch'].depart_time[0:2]+':'+thing['dispatch'].depart_time[2:4]}
-    return things
-
 # 3rd : get dispatch part
 def get_dispatch_list(parts):
     route_keys = parts.values_list('lane_key')
@@ -114,6 +106,7 @@ def get_dispatch_list(parts):
     things = sorted(things, key=lambda d: d['dptime'])
 
     return things
+
 
 # Cleanup duplicates inside functions
 def cleanup_arrivals_and_positions(arrs, poss):
