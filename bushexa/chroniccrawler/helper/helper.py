@@ -95,12 +95,15 @@ def get_dispatch_list(parts):
     nowformat = now.hour * 100 + now.minute
     for tt in timetables:
         if int(tt.depart_time) >= nowformat:
+            part = parts.get(lane_key=tt.route_key_usb.route_key)
+            only_departure = part.first_node_key == part.last_node_key and part.first_node_key.node_order == 1
             things.append(  {
                                 'remain_stops': sys.maxsize,
                                 'dptime': int(tt.depart_time),
                                 'thing':
                                     {
-                                        'bus_time':tt.depart_time[0:2]+':'+tt.depart_time[2:4],
+                                        'bus_time': tt.depart_time[0:2]+':'+tt.depart_time[2:4],
+                                        'only_departure': only_departure,
                                     },
                             })
     things = sorted(things, key=lambda d: d['dptime'])
