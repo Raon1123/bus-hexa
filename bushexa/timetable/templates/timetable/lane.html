@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load timetable_extras %}
+{% load static %}
+
+{% block head %}
+{% endblock head %}
+
+{% block title %}Bus HeXA{% endblock title %}
+
+
+{% block content %}
+
+<section>
+    <aside>
+        <p>{{ lane }}</p>
+    </aside>
+</section>
+
+<section>
+    <table>
+        {% for node in nodes %}
+        <tr>
+            <td>{{ node.node_name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div>
+        <table>
+            {% for tt in timetables %}
+            <tr>
+                <td>{{ tt.hour }}:{{ tt.minute }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+</section>
+
+
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load timetable_extras %}
+{% load static %}
+
+{% block head %}
+{% endblock head %}
+
+{% block title %}Bus HeXA{% endblock title %}
+
+
+{% block content %}
+
+<section>
+    <aside>
+        <section>
+            {% for lane in lanes %}
+            <p><a href={% url 'indlane' lane.lane_key %}>{{ lane.lane_key__bus_name }}</a></p>
+            {% endfor %}
+        </section>
+    </aside>
+</section>
+
+{% endblock content %}
