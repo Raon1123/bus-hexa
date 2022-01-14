@@ -18,20 +18,32 @@
 
 <section>
     <table>
+        <thead>
+            <tr>
+                <th>노선</th>
+                <th>운행중</th>
+            </tr>
+        </thead>
         {% for node in nodes %}
         <tr>
             <td>{{ node.node_name }}</td>
+            <td>something</td>
         </tr>
         {% endfor %}
     </table>
     <div>
-        <table>
+    <table>
+        <thead>
+            <tr>
+                <th>시간표</th>
+            </tr>
+        </thead>
             {% for tt in timetables %}
             <tr>
                 <td>{{ tt.hour }}:{{ tt.minute }}</td>
             </tr>
             {% endfor %}
-        </table>
+    </table>
 </section>
 
 
