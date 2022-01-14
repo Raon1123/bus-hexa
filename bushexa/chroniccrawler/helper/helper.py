@@ -86,25 +86,28 @@ def get_position_list(parts):
 
 
 # 3rd : get dispatch part
-def get_dispatch_list(parts):
-    route_keys = parts.values_list('lane_key')
-    route_key_usbs = UlsanBus_LaneToTrack.objects.filter(route_key__in=route_keys)
-    timetables = UlsanBus_TimeTable.objects.filter(route_key_usb__in=route_key_usbs)
+def get_dispatch_list(parts, count):
+    dispatches = PartOfLane.objects.raw('SELECT * FROM (SELECT * FROM (SELECT * FROM chroniccrawler_partoflane WHERE id IN ({})) AS pol INNER JOIN chroniccrawler_ulsanbus_lanetotrack AS ultt ON pol.lane_key_id=ultt.route_key_id INNER JOIN chroniccrawler_ulsanbus_timetable AS tt ON tt.route_key_usb_id=ultt.id ORDER BY tt.depart_time ASC) AS inne INNER JOIN chroniccrawler_nodeoflane AS nol ON inne.first_node_key_id=nol.id;'.format(", ".join([str(p.id) for p in parts])))
+
     things = []
     now = datetime.datetime.now()
     nowformat = now.hour * 100 + now.minute
-    for tt in timetables:
-        if int(tt.depart_time) >= nowformat:
+    cc = 0
+    for dp in dispatches:
+        if cc >= count:
+            break
+        if int(dp.depart_time) >= nowformat:
+            only_departure = dp.first_node_key == dp.last_node_key and dp.node_order == 1
             things.append(  {
                                 'remain_stops': sys.maxsize,
-                                'dptime': int(tt.depart_time),
+                                'dptime': int(dp.depart_time),
                                 'thing':
                                     {
-                                        'bus_time':tt.depart_time[0:2]+':'+tt.depart_time[2:4],
+                                        'bus_time': dp.depart_time[0:2]+':'+dp.depart_time[2:4],
+                                        'only_departure': only_departure,
                                     },
                             })
-    things = sorted(things, key=lambda d: d['dptime'])
-
+    print(things)
     return things
 
 
@@ -147,7 +150,7 @@ def next_n_bus_from_alias(alias, n):
 
     arrivals = get_arrival_list(parts)
     positions = get_position_list(parts)
-    dispatches = get_dispatch_list(parts)
+    dispatches = get_dispatch_list(parts, count)
 
     if arrivals is None:
         arrivals = []
