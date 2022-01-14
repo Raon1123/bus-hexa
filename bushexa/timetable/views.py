@@ -70,6 +70,13 @@ class AliasToIndividualBusView(DetailView, TemplateResponseMixin):
         context.update(lanes)
         return context
 
+    def render_to_response(self, context, **response_kwargs):
+        l = context['lanes']
+        if l.count() == 1:
+            return redirect('indlane', l[0]['lane_key'])
+        else:
+            return super().render_to_response(context, **response_kwargs)
+
 
 class IndividualLaneView(DetailView, TemplateResponseMixin):
 
