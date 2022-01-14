@@ -51,6 +51,9 @@
                     {% if info.bus_time %}
                     <tr>
                         <td>&#128338; {{ info.bus_time }} 출발예정 </td>
+                        {% if info.only_departure %}
+                        <td>기점</td>
+                        {% endif %}
                     </tr>
                     {% endif %}
                     {% if info.no_data %}
