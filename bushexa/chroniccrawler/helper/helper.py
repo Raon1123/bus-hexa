@@ -107,7 +107,6 @@ def get_dispatch_list(parts, count):
                                         'only_departure': only_departure,
                                     },
                             })
-    print(things)
     return things
 
 
