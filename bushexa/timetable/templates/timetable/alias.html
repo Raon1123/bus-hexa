@@ -14,7 +14,7 @@
     <aside>
         <section>
             {% for lane in lanes %}
-            <p><a href={% url 'indlane' lane.lane_key %}>{{ lane.lane_key__bus_name }}</a></p>
+            <p onclick="location.href='{% url 'indlane' lane.lane_key %}'">{{ lane.lane_key__bus_name }}</p>
             {% endfor %}
         </section>
     </aside>
