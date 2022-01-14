@@ -172,9 +172,12 @@ def next_n_bus_from_alias(alias, n):
 
     total = arrivals + positions + dispatches
     sort = sorted(total, key=lambda d: d['remain_stops'])
+    nextn = None
     while len(sort) < n:
         sort.append({'thing': {'no_data': 'No_data'}})
-    nextn = [s['thing'] for s in sort[0:n]]
-    
-    ret = {'bus_name': alias.alias_name, 'stop_info': nextn, 'only_departure': only_departure}
+    if n > 0:
+        nextn = [s['thing'] for s in sort[0:n]]
+    elif n == 0:
+        nextn = [s['thing'] for s in sort]
+    ret = {'pk': alias.id, 'bus_name': alias.alias_name, 'stop_info': nextn, 'only_departure': only_departure}
     return ret
