@@ -1,6 +1,9 @@
 import sys
 import datetime
 import copy
+
+from django.db.models import Exists, OuterRef
+
 from chroniccrawler.models import *
 
 
@@ -82,44 +85,29 @@ def get_position_list(parts):
     return format_position_list(nlanes)
 
 
-# format 3rd
-def format_dispatch_list(things):
-    # add format and info
-    for thing in things:
-        thing['remain_stops'] = sys.maxsize
-        thing['thing'] = {'bus_time': thing['dispatch'].depart_time[0:2]+':'+thing['dispatch'].depart_time[2:4]}
-    return things
-
 # 3rd : get dispatch part
 def get_dispatch_list(parts):
-    # add lane
-    lanes = [{'part':p, 'lane':p.lane_key} for p in parts]
-    # add usblane
-    usblanes = UlsanBus_LaneToTrack.objects.filter(route_key__in=[l['lane'] for l in lanes])
-    for lane in lanes:
-        for usbl in usblanes:
-            if lane['lane'] == usbl.route_key:
-                lane['usblane'] = usbl
-    # for each lane
+    route_keys = parts.values_list('lane_key')
+    route_key_usbs = UlsanBus_LaneToTrack.objects.filter(route_key__in=route_keys)
+    timetables = UlsanBus_TimeTable.objects.filter(route_key_usb__in=route_key_usbs)
     things = []
     now = datetime.datetime.now()
     nowformat = now.hour * 100 + now.minute
-    for lane in lanes:
-        # get timetables
-        dps = UlsanBus_TimeTable.objects.filter(route_key_usb=lane['usblane'])
-        # filter timetable earilier than now
-        ndps = []
-        for dp in dps:
-            if int(dp.depart_time) >= nowformat:
-                ndps.append(dp)
-        for dp in ndps:
-            thing = copy.deepcopy(lane)
-            thing['dispatch'] = dp
-            things.append(thing)
-    # format
-    things = sorted(things, key=lambda d: int(d['dispatch'].depart_time))
-    return format_dispatch_list(things)
-        
+    for tt in timetables:
+        if int(tt.depart_time) >= nowformat:
+            things.append(  {
+                                'remain_stops': sys.maxsize,
+                                'dptime': int(tt.depart_time),
+                                'thing':
+                                    {
+                                        'bus_time':tt.depart_time[0:2]+':'+tt.depart_time[2:4],
+                                    },
+                            })
+    things = sorted(things, key=lambda d: d['dptime'])
+
+    return things
+
+
 # Cleanup duplicates inside functions
 def cleanup_arrivals_and_positions(arrs, poss):
     # Find duplicate entries that are in both arrivals and positions and delete from positions
@@ -141,21 +129,21 @@ def cleanup_arrivals_and_positions(arrs, poss):
 def next_n_bus_from_alias(alias, n):
     count = n
 
-    maps = MapToAlias.objects.filter(alias_key=alias)
-    parts = []
+    #maps = MapToAlias.objects.filter(alias_key=alias).values_list('lane_key', 'count')
+
+     
+    parts = PartOfLane.objects.filter(
+                    Exists(
+                            MapToAlias.objects.filter(
+                                    lane_key_id=OuterRef('lane_key_id'), count=OuterRef('count'), alias_key=alias
+                            )
+                    )
+            ).select_related('lane_key', 'first_node_key', 'last_node_key')
+    
     only_departure = True
-    for m in maps:
-        lane = m.lane_key
-        count = m.count
-        part = None
-        try:
-            part = PartOfLane.objects.get(lane_key=lane, count=count)
-        except:
-            continue
-        else:
-            only_departure = only_departure and part.only_departure()
-            if part is not None:
-                parts.append(part)
+    for p in parts:
+        now_only_departure = p.first_node_key == p.last_node_key and p.first_node_key.node_order == 1
+        only_departure = only_departure and now_only_departure
 
     arrivals = get_arrival_list(parts)
     positions = get_position_list(parts)
