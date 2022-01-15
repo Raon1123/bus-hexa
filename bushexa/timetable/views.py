@@ -109,6 +109,10 @@ class IndividualLaneView(DetailView, TemplateResponseMixin):
         possd = {'positions': {p['node_order']: p['bus_num'] for p in poss}}
         tts = UlsanBus_TimeTable.objects.filter(route_key_usb__route_key=context['lane'])
         timetables = {'timetables': [{'hour': tt.depart_time[:2], 'minute': tt.depart_time[2:],} for tt in tts],}
+        lms = LandmarkOfLane.objects.get(route_key=context['lane']).landmark_keys.all()\
+                                    .select_related('alias_key__alias_name')\
+                                    .values_list('alias_key__alias_name', flat=True).distinct()
+        context.update({'landmarks': ", ".join(lms)})
         context.update(nodes)
         context.update(timetables)
         context.update(possd)
