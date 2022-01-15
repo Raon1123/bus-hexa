@@ -11,6 +11,7 @@ admin.site.register(PartOfLane)
 admin.site.register(MapToAlias)
 
 admin.site.register(DayInfo)
+admin.site.register(VacationDate)
 
 admin.site.register(UlsanBus_LaneToTrack)
 admin.site.register(UlsanBus_TimeTable)
