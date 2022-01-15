@@ -78,10 +78,23 @@ class AliasToIndividualBusView(DetailView, TemplateResponseMixin):
             return super().render_to_response(context, **response_kwargs)
 
 
-class AllLanesView(ListView, TemplateResponseMixin):
+class AllLanesView(TemplateView):
     
-    model = LaneToTrack
     template_name = "timetable/lanes.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ldict = {}
+        lanes = LaneToTrack.objects.all()
+        for l in lanes:
+            k = l.bus_name.split('(')[0]
+            if ldict.get(k):
+                ldict.get(k).append(l)
+            else:
+                ldict[k] = [l]
+        context.update({'lane_groups':ldict})
+        return context
+        
 
 class IndividualLaneView(DetailView, TemplateResponseMixin):
 

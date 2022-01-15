@@ -8,8 +8,12 @@
 
 {% block content %}
 <section>
-{% for lane in object_list %}
-    <p onclick="location.href='{% url 'indlane' lane.id %}'">{{ lane.bus_name }}</p>
-{% endfor %}
+    {% for num, lanes in lane_groups.items %}
+        <aside>
+            {% for lane in lanes %}
+            <p onclick="location.href='{% url 'indlane' lane.id %}'">{{ lane.bus_name }}</p>
+            {% endfor %}
+        </aside>
+    {% endfor %}
 </section>
 {% endblock content %}
