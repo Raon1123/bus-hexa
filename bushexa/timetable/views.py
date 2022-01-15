@@ -1,7 +1,7 @@
 from typing import Any, Dict
 from django.shortcuts import redirect
 # from django.http import HttpResponse, JsonResponse
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, ListView
 from django.views.generic.base import TemplateResponseMixin
 from .tools.tools import *
 from .tools.helpers import *
@@ -77,6 +77,11 @@ class AliasToIndividualBusView(DetailView, TemplateResponseMixin):
         else:
             return super().render_to_response(context, **response_kwargs)
 
+
+class AllLanesView(ListView, TemplateResponseMixin):
+    
+    model = LaneToTrack
+    template_name = "timetable/lanes.html"
 
 class IndividualLaneView(DetailView, TemplateResponseMixin):
 
