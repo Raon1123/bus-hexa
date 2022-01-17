@@ -10,10 +10,12 @@
 
 {% block content %}
 
-<section>
+<article>
     <aside>
-        <p>{{ lane }}</p>
+        <p>노선명: {{ lane.bus_name }}</p>
     </aside>
+</article>
+<section>
     <aside>
         <p>주요역: {{ landmarks }}</p>
     </aside>
