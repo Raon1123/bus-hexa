@@ -165,3 +165,18 @@ class LandmarkOfLane(models.Model):
         return ", ".join(landmark_aliass)
             
 
+# Store vacation durations
+class VacationDate(models.Model):
+    vacation_first_day = models.DateField(null=False, blank=False)
+    vacation_last_day = models.DateField(null=False, blank=False)
+    desc = models.CharField(max_length=30, blank=True)
+
+    def __str__(self):
+        return self.desc + " from " + self.vacation_first_day.strftime('%y-%m-%d') + \
+                " to " + self.vacation_last_day.strftime('%y-%m-%d')
+
+    def during_vacation(self, date):
+        if self.vacation_first_day <= date and date <= self.vacation_last_day:
+            return True
+        else:
+            return False
