@@ -3,7 +3,7 @@ import datetime
 from .tools.getkey import get_key
 from .tools.requestor import request_dict
 
-from chroniccrawler.models import DayInfo
+from chroniccrawler.models import DayInfo, VacationDate
 
 
 def get_time():
@@ -57,6 +57,12 @@ def store_dayinfo(now, resdict):
         if oneday['locdate'] == year + month + day and oneday['isHoliday'] == 'Y':
             name = oneday['dateName']
             kind = 2
+    vacation = False
+    for vacations in VacationDate.objects.all():
+        vacation = vacation | vacations.during_vacation(now.date())
+
+    if vacation:
+        kind = kind + 3
 
     today = DayInfo(year=year, month=month, day=day, name=name, kind=kind)
     today.save()

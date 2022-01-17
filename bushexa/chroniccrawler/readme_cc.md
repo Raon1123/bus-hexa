@@ -106,6 +106,18 @@ Alias key: "어느 Lane alias에 매핑할 것인지"
 
 그 후, Landmark aliass에는 버스가 지나는 역 중 중요하며 경유역으로 표시하고 싶은 위치의 이름을 입력하고, Landmark nodes에 각 위치에 해당하는 역의 id를 모두 입력하세요.
 
+### 방학 기간 
+
+CHRONICCRAWLER 란의 Vacation dates에 직접 정보를 등록해야합니다.
+
+vacation first day : 시작일
+
+vacation last day : 마지막날
+
+desc : 설명
+
+등록 이후부터는 오늘의 날짜가 시작일-마지막날 사이에 있는 경우 일반 시간표 대신 방학 시간표를 가져옵니다.
+
 이후 밑에서 설명하는 작업 실행하기를 시행하면 나머지 DB는 알아서 채워집니다.
 
 ### 기능 : 매일 해야 할 작업 실행하기
