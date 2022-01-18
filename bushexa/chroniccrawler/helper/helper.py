@@ -87,7 +87,7 @@ def get_position_list(parts):
 
 # 3rd : get dispatch part
 def get_dispatch_list(parts, count):
-    dispatches = PartOfLane.objects.raw('SELECT * FROM (SELECT * FROM (SELECT * FROM chroniccrawler_partoflane WHERE id IN ({})) AS pol INNER JOIN chroniccrawler_ulsanbus_lanetotrack AS ultt ON pol.lane_key_id=ultt.route_key_id INNER JOIN chroniccrawler_ulsanbus_timetable AS tt ON tt.route_key_usb_id=ultt.id ORDER BY tt.depart_time ASC) AS inne INNER JOIN chroniccrawler_nodeoflane AS nol ON inne.first_node_key_id=nol.id;'.format(", ".join([str(p.id) for p in parts])))
+    dispatches = PartOfLane.objects.raw('SELECT * FROM (SELECT * FROM (SELECT * FROM chroniccrawler_partoflane WHERE id IN ({})) AS pol INNER JOIN chroniccrawler_ulsanbus_lanetotrack AS ultt ON pol.lane_key_id=ultt.route_key_id INNER JOIN chroniccrawler_ulsanbus_timetable AS tt ON tt.route_key_usb_id=ultt.id) AS inne INNER JOIN chroniccrawler_nodeoflane AS nol ON inne.first_node_key_id=nol.id ORDER BY inne.depart_time ASC;'.format(", ".join([str(p.id) for p in parts])))
 
     things = []
     now = datetime.datetime.now()
