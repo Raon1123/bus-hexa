@@ -106,7 +106,7 @@ class IndividualLaneView(DetailView, TemplateResponseMixin):
         context = super().get_context_data(**kwargs)
         nodes = {'nodes': NodeOfLane.objects.filter(route_key=context['lane']).values('node_order', 'node_name')}
         poss = PosOfBus.objects.filter(route_key=context['lane']).values('node_order', 'bus_num')
-        possd = {'positions': {p['node_order']: p['bus_num'] for p in poss}}
+        possd = {'positions': {p['node_order']: p['bus_num'][2:] for p in poss}}
         tts = UlsanBus_TimeTable.objects.filter(route_key_usb__route_key=context['lane'])
         timetables = {'timetables': [{'hour': tt.depart_time[:2], 'minute': tt.depart_time[2:],} for tt in tts],}
         lms = LandmarkOfLane.objects.get(route_key=context['lane']).landmark_keys.all()\
