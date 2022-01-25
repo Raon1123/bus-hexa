@@ -25,7 +25,7 @@
 
 <section>
     {% for bus in bus_info %}
-    <aside>
+    <aside onclick="location.href='{% url 'alias' bus.pk %}'">
         <section>
             <table style="overflow-x:hidden;">
                 <thead>

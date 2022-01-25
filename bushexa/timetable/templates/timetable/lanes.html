@@ -1,0 +1,19 @@
+{% extends "base.html" %} 
+{% load static %}
+
+{% block head %}
+{% endblock head %}
+
+{% block title %}Bus HeXA{% endblock title %}
+
+{% block content %}
+<section>
+    {% for num, lanes in lane_groups.items %}
+        <aside>
+            {% for lane in lanes %}
+            <p onclick="location.href='{% url 'indlane' lane.id %}'">{{ lane.bus_name }}</p>
+            {% endfor %}
+        </aside>
+    {% endfor %}
+</section>
+{% endblock content %}
