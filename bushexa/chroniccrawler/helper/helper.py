@@ -120,8 +120,6 @@ def cleanup_arrivals_and_positions(arrs, poss):
     for pos in poss:
         couple = False
         for arr in arrs:
-            if pos['pos'].bus_num == "울산71자2666":
-                print(arr['arrival'].vehicle_no == pos['pos'].bus_num)
             if arr['arrival'].vehicle_no == pos['pos'].bus_num:
                 couple = True
                 newarrs.append(arr)
