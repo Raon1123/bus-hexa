@@ -116,15 +116,16 @@ def cleanup_arrivals_and_positions(arrs, poss):
     # Fix wrong arrival info : 337 is a ############
     newarrs = []
     newposs = []
-    for arr in arrs:
-        nomatch = True
-        for pos in poss:
-            if arr['arrival'].vehicle_no != pos['pos'].bus_num:
-                newposs.append(pos)
-            else:
-                nomatch = False
-        if not nomatch:
-            newarrs.append(arr)
+
+    for pos in poss:
+        couple = False
+        for arr in arrs:
+            if arr['arrival'].vehicle_no == pos['pos'].bus_num:
+                couple = True
+                newarrs.append(arr)
+        if not couple:
+            newposs.append(pos)
+    
     return newarrs, newposs# newarrivals, newpositions
 
 # Construct information for next n bus'
