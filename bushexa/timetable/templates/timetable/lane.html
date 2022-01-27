@@ -42,7 +42,7 @@ function ttshowhide() {
         </thead>
         {% for tt in timetables %}
             <tr>
-                <td class="tt">{{ tt.hour }}:{{ tt.minute }}</td>
+                <td class="tt" style="display:none">{{ tt.hour }}:{{ tt.minute }}</td>
             </tr>
         {% endfor %}
     </table>
