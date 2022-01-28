@@ -3,6 +3,7 @@
 {% load static %}
 
 {% block head %}
+<link rel="stylesheet" href="/static/src/css/lane.css">
 <script>
 function ttshowhide() {
     var tts = document.getElementsByClassName("tt");
@@ -41,7 +42,7 @@ function ttshowhide() {
         </thead>
         {% for tt in timetables %}
             <tr>
-                <td class="tt" style="display: none;">{{ tt.hour }}:{{ tt.minute }}</td>
+                <td class="tt" style="display:none">{{ tt.hour }}:{{ tt.minute }}</td>
             </tr>
         {% endfor %}
     </table>
@@ -50,15 +51,15 @@ function ttshowhide() {
     <table>
         <thead>
             <tr>
-                <th>순번</th>
-                <th>노선</th>
+                <th class="nord">순번</th>
+                <th class="nnm">노선</th>
                 <th>운행중</th>
             </tr>
         </thead>
         {% for node in nodes %}
         <tr>
-            <td>{{ node.node_order }}</td>
-            <td>{{ node.node_name }}</td>
+            <td class="nord"><small>{{ node.node_order }}</small></td>
+            <td class="nnm">{{ node.node_name }}</td>
             <td>
                 {% if positions|reportkey:node.node_order %}
                     {{ positions|reportkey:node.node_order }}
