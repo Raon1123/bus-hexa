@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'analytics.apps.AnalyticsConfig',
     'timetable.apps.TimetableConfig',
     'chroniccrawler.apps.ChroniccrawlerConfig',
 ]

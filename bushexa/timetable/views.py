@@ -3,10 +3,12 @@ from django.shortcuts import redirect
 # from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView, DetailView, ListView
 from django.views.generic.base import TemplateResponseMixin
+from django.utils.decorators import method_decorator
 from .tools.tools import *
 from .tools.helpers import *
 
 from chroniccrawler import *
+from analytics.decorators import track_hourly_load
 
 
 class TimeTableMixin:
@@ -21,6 +23,8 @@ class TimeTableMixin:
             'time_table': bus_time,
         }
 
+
+@method_decorator(track_hourly_load, name='dispatch')
 class TimeBasedBusListView(TemplateView, TimeTableMixin):
 
     template_name = "timetable/departure.html"
@@ -46,6 +50,8 @@ class BusInfoMixin:
             'bus_info': bus_info
         }
 
+
+@method_decorator(track_hourly_load, name='dispatch')
 class BusNumberBasedBusListView(TemplateView, BusInfoMixin):
 
     template_name = "timetable/busno.html"
@@ -56,6 +62,7 @@ class BusNumberBasedBusListView(TemplateView, BusInfoMixin):
         return context
 
 
+@method_decorator(track_hourly_load, name='dispatch')
 class AliasToIndividualBusView(DetailView, TemplateResponseMixin):
 
     model = LaneAlias
@@ -78,6 +85,7 @@ class AliasToIndividualBusView(DetailView, TemplateResponseMixin):
             return super().render_to_response(context, **response_kwargs)
 
 
+@method_decorator(track_hourly_load, name='dispatch')
 class AllLanesView(TemplateView):
     
     template_name = "timetable/lanes.html"
@@ -96,6 +104,7 @@ class AllLanesView(TemplateView):
         return context
         
 
+@method_decorator(track_hourly_load, name='dispatch')
 class IndividualLaneView(DetailView, TemplateResponseMixin):
 
     model = LaneToTrack
