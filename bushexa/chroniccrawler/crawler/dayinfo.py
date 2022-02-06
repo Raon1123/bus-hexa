@@ -1,7 +1,8 @@
 import datetime
+import requests
+import xmltodict
 
 from .tools.getkey import get_key
-from .tools.requestor import request_dict
 
 from chroniccrawler.models import DayInfo, VacationDate
 
@@ -20,8 +21,15 @@ def request_dayinfo(now):
 
     params = {'serviceKey': key, 'numOfRow': rows, 'solYear': year, 'solMonth': month}
 
-    rdict = request_dict(url, params)
-    return rdict
+    r = None
+    retry = 3
+    for t in range(retry):
+        r = requests.get(url, params=params, timeout=8)
+        if r.status_code == 200:
+            break
+    if r.status_code != 200:
+        return None
+    return xmltodict.parse(r.text)
 
 
 def store_dayinfo(now, resdict):
@@ -45,18 +53,22 @@ def store_dayinfo(now, resdict):
         name = "주중"
         kind = 0
     
-    # Special day check
-    if resdict['response']['body']['totalCount'] == '0':
-        newlist = []
-    elif resdict['response']['body']['totalCount'] == '1':
-        newlist = [resdict['response']['body']['items']['item']]
+    if resdict is None:
+        pass
     else:
-        newlist = resdict['response']['body']['items']['item']
+        # Special day check
+        if resdict['response']['body']['totalCount'] == '0':
+            newlist = []
+        elif resdict['response']['body']['totalCount'] == '1':
+            newlist = [resdict['response']['body']['items']['item']]
+        else:
+            newlist = resdict['response']['body']['items']['item']
 
-    for oneday in newlist:
-        if oneday['locdate'] == year + month + day and oneday['isHoliday'] == 'Y':
-            name = oneday['dateName']
-            kind = 2
+        for oneday in newlist:
+            if oneday['locdate'] == year + month + day and oneday['isHoliday'] == 'Y':
+                name = oneday['dateName']
+                kind = 2
+
     vacation = False
     for vacations in VacationDate.objects.all():
         vacation = vacation | vacations.during_vacation(now.date())

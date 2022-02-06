@@ -5,6 +5,7 @@ from chroniccrawler.crawler.laneinfo import do_laneinfo
 from chroniccrawler.crawler.timetable_usb import do_timetable
 from chroniccrawler.crawler.buspos import do_buspos
 from chroniccrawler.crawler.arrivalinfo import do_arrivalinfo
+from chroniccrawler.crawler.daily import do_daily
 from chroniccrawler.crawler.timed import do_timed
 from chroniccrawler.crawler.autopart import do_lanepart
 from chroniccrawler.crawler.landmark import do_landmark
@@ -28,9 +29,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if options['daily']:
             do_dayinfo()
-            do_laneinfo()
-            dayinfo = DayInfo.objects.first()
-            do_timetable(dayinfo.kind)
+            do_daily()
             do_lanepart()
             do_landmark()
         elif options['timed']:
