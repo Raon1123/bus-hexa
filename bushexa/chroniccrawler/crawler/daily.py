@@ -12,8 +12,8 @@ from chroniccrawler.models import DayInfo
 
 async def get_gather(l_u_ps, ul_u_ps):
     loop = asyncio.get_event_loop()
-    l_task = loop.create_task(rq.get_all(l_u_ps))
-    ul_task = loop.create_task(rq.get_all(ul_u_ps))
+    l_task = loop.create_task(rq.get_all(l_u_ps, timeout=100))
+    ul_task = loop.create_task(rq.get_all(ul_u_ps, timeout=100))
 
     l_texts = await l_task
     ul_texts = await ul_task
