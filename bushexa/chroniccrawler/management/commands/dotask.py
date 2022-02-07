@@ -1,3 +1,5 @@
+import logging
+
 from django.core.management.base import BaseCommand, CommandError
 
 from chroniccrawler.crawler.dayinfo import do_dayinfo
@@ -11,6 +13,9 @@ from chroniccrawler.crawler.autopart import do_lanepart
 from chroniccrawler.crawler.landmark import do_landmark
 
 from chroniccrawler.models import DayInfo
+
+
+logger = logging.getLogger('test')
 
 class Command(BaseCommand):
     help = "Execute request-and-store-on-database tasks.\nPlease pass only one argument per execution."
@@ -28,10 +33,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options['daily']:
+            logger.info("Daily task start")
             do_dayinfo()
+            logger.info("Day info saved")
             do_daily()
+            logger.info("Node of lanes and timetable saved")
             do_lanepart()
+            logger.info("Lane part created")
             do_landmark()
+            logger.info("Landmark checked")
+            logger.info("Daily task end")
         elif options['timed']:
             do_timed()
         elif options['date']:
