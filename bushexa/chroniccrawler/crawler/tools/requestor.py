@@ -16,12 +16,14 @@ async def get_one(t_u_p):
             text = await response.text()
             stat = response.status
         if stat == 200:
-            logger.debug("Succeeded response from " + str(response.real_url))
+            logger.debug("Succeeded response from " 
+                    + str(response.real_url).split('/')[2] + "/.../" 
+                    + str(response.real_url).split('/')[-1].split('?')[0])
             return (t_u_p[0], text)
         else:
             return (t_u_p, None)
     except asyncio.CancelledError:
-        logger.info("Cancelled " + str(t_u_p))
+        logger.warning("Cancelled " + str(t_u_p[0]))
         return (t_u_p, None)
 
 # Manager Async function : get t_u_p iterable as input, return thing_response pair list as output
