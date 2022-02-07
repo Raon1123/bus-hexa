@@ -15,7 +15,7 @@ from chroniccrawler.crawler.landmark import do_landmark
 from chroniccrawler.models import DayInfo
 
 
-logger = logging.getLogger('test')
+logger = logging.getLogger('bushexa')
 
 class Command(BaseCommand):
     help = "Execute request-and-store-on-database tasks.\nPlease pass only one argument per execution."
@@ -42,9 +42,11 @@ class Command(BaseCommand):
             logger.info("Lane part created")
             do_landmark()
             logger.info("Landmark checked")
-            logger.info("Daily task end")
+            logger.info("Daily task done")
         elif options['timed']:
+            logger.info("Timed task start")
             do_timed()
+            logger.info("Timed task done")
         elif options['date']:
             do_dayinfo()
         elif options['lane']:

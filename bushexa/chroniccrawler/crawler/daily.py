@@ -1,3 +1,4 @@
+import logging
 import asyncio
 import xmltodict
 
@@ -10,10 +11,14 @@ import chroniccrawler.crawler.tools.listifier as ls
 from chroniccrawler.models import DayInfo
 
 
+logger = logging.getLogger('bushexa')
+
+
 async def get_gather(l_u_ps, ul_u_ps):
     loop = asyncio.get_event_loop()
     l_task = loop.create_task(rq.get_all(l_u_ps, timeout=100))
     ul_task = loop.create_task(rq.get_all(ul_u_ps, timeout=100))
+    logger.debug("Daily task created")
 
     l_texts = await l_task
     ul_texts = await ul_task
@@ -26,12 +31,15 @@ def do_daily():
     usblanes = timetable.get_all_lanes_to_request()
 
     todayinfo = DayInfo.objects.first()
+    logger.debug("Fetch from database done")
 
     l_u_ps = laneinfo.ready_request(lanes)
     ul_u_ps = timetable.ready_request(usblanes, todayinfo.kind)
+    logger.debug("Format to request done")
 
     loop = asyncio.get_event_loop()
     l_texts, ul_texts = loop.run_until_complete(get_gather(l_u_ps, ul_u_ps))
+    logger.debug("Request and response done")
 
     lane_rdicts = []
     ul_rdicts = []
@@ -44,6 +52,7 @@ def do_daily():
         if lt[1] is not None:
             d = xmltodict.parse(lt[1])
             ul_rdicts.append((lt[0], d))
+    logger.debug("Filtered out failed requests")
 
     for lr in lane_rdicts:
         info = ls.element_list(['response', 'body', 'totalCount'], lr[1],
@@ -52,5 +61,5 @@ def do_daily():
     for lr in ul_rdicts:
         info = ls.element_list(['tableInfo', 'totalCnt'], lr[1], ['tableInfo', 'list', 'row'])
         timetable.store_time_table(lr[0], info)
-
+    logger.debug("Lane node and timetable saved to db")
     return

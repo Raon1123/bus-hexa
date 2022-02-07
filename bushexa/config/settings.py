@@ -157,6 +157,8 @@ STATICFILES_DIRS = [
 
 # Logger
 
+logger_name = 'bushexa'
+
 info_to_file = 'info_to_file'
 debug_to_file = 'debug_to_file'
 
@@ -190,7 +192,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        'test': {
+        logger_name: {
             'handlers': handler_list,
             'level': 'DEBUG',
             'propagate': False,

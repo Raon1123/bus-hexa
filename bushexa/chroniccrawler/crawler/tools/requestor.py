@@ -1,7 +1,11 @@
 import asyncio
 import aiohttp
+import logging
 import xmltodict
 import requests
+
+
+logger = logging.getLogger('bushexa')
 
 
 # One request async function : get t_u_p as input, return thing_response pair as output
@@ -12,10 +16,12 @@ async def get_one(t_u_p):
             text = await response.text()
             stat = response.status
         if stat == 200:
+            logger.debug("Succeeded response from " + str(response.real_url))
             return (t_u_p[0], text)
         else:
             return (t_u_p, None)
     except asyncio.CancelledError:
+        logger.info("Cancelled " + str(t_u_p))
         return (t_u_p, None)
 
 # Manager Async function : get t_u_p iterable as input, return thing_response pair list as output
@@ -23,6 +29,7 @@ async def get_one(t_u_p):
 async def get_all(t_u_ps, timeout = 9):
     loop = asyncio.get_event_loop()
 
+    logger.debug("Start requests")
     timer = loop.create_task(asyncio.sleep(timeout))
     tasks = [loop.create_task(get_one(t_u_p)) for t_u_p in t_u_ps]
     task_timer_pair = [asyncio.gather(*tasks), timer]
@@ -32,6 +39,7 @@ async def get_all(t_u_ps, timeout = 9):
     timer.cancel()
     for t in tasks:
         t.cancel()
+    logger.debug("Requests done")
 
     return await asyncio.gather(*tasks)
 
