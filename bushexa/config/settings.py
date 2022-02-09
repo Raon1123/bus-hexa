@@ -155,3 +155,48 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+# Logger
+
+logger_name = 'bushexa'
+
+info_to_file = 'info_to_file'
+debug_to_file = 'debug_to_file'
+
+handler_list = [info_to_file]
+
+if DEBUG:
+    handler_list.append(debug_to_file)
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'basic': {
+            'format': '[{levelname}] [{asctime}] : {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        info_to_file: {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'utils/log.log'),
+            'formatter': 'basic',
+        },
+        debug_to_file: {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'utils/debug.log'),
+            'formatter': 'basic',
+        },
+    },
+    'loggers': {
+        logger_name: {
+            'handlers': handler_list,
+            'level': 'DEBUG',
+            'propagate': False,
+        }
+    }
+}
+
