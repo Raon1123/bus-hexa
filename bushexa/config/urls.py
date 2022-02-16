@@ -19,5 +19,6 @@ from django.urls import include, path
 urlpatterns = [
     path('', include('timetable.urls')),
     path('chroniccrawler/', include('chroniccrawler.urls')),
+    path('', include('apibushexa.urls')),
     path('master/', admin.site.urls),
 ]
