@@ -8,7 +8,8 @@ BUSNO_HOW_MUCH_ENTRY_PER_LANE = 2
 
 def get_all_alias():
     alias = LaneAlias.objects.raw("""
-        SELECT *, map.lane_key_id as lane_key, nol.node_order as first_node_order, nol2.node_order as last_node_order
+        SELECT *, map.lane_key_id AS lane_key, nol.node_order AS first_node_order, nol2.node_order AS last_node_order,
+        pol.id AS pid
         FROM chroniccrawler_lanealias AS la
         INNER JOIN chroniccrawler_maptoalias AS map ON la.id=map.alias_key_id
         INNER JOIN chroniccrawler_partoflane AS pol ON map.lane_key_id=pol.lane_key_id AND map.count=pol.count
@@ -21,11 +22,11 @@ def get_all_alias():
     for a in alias:
         part = {"lane_key": a.lane_key, "first_order": a.first_node_order, "last_order":a.last_node_order}
         if a.id in alias_dict:
-            alias_dict[a.id]["part"].append(part)
+            alias_dict[a.id]["part"][a.pid] = part
         else:
             alias_dict[a.id] = {
                 "name": a.alias_name,
-                "part": [part]
+                "part": {a.pid: part},
             }
 
     return alias_dict
@@ -101,13 +102,13 @@ def get_all_departures():
     hour = now.hour
     minute = now.minute
 
-    four = now.strftime("%H%M")
+    four = str(1930)#now.strftime("%H%M")
 
     timetables = UlsanBus_TimeTable.objects.raw("""
-        SELECT *, dep.aid AS aid
+        SELECT *, dep.aid AS aid, dep.lid AS lid
         FROM
         (
-            SELECT *, mta.alias_key_id AS aid, ROW_NUMBER() OVER 
+            SELECT *, mta.alias_key_id AS aid, ltt.id AS lid, ROW_NUMBER() OVER 
             (
                 PARTITION BY mta.alias_key_id ORDER BY depart_time ASC
             ) AS seq
@@ -127,10 +128,11 @@ def get_all_departures():
     tt_dict = {}
         
     for tt in timetables:
+        lane_and_time = {"depart_time": tt.depart_time, "lane_key": tt.lid}
         if tt.aid in tt_dict:
-            tt_dict[tt.aid].append(tt.depart_time)
+            tt_dict[tt.aid].append(lane_and_time)
         else:
-            tt_dict[tt.aid] = [tt.depart_time]
+            tt_dict[tt.aid] = [lane_and_time]
     return tt_dict
 
 
