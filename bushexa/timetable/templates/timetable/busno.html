@@ -5,6 +5,7 @@
 {% block head %}
 <link rel="stylesheet" href="{% static 'src/css/busno.css' %}">
 <script type="module" src="{% static 'src/js/busno.vue-registry.js' %}"></script>
+<script id="apibusno" src="{% static 'src/js/busno.apibusno_to_dom.js' %}"></script>
 
 {% endblock head %}
 
@@ -19,54 +20,18 @@
         {% else %}
         <p> 정류소가 조회되지 않습니다. </p>
         {% endif %}
+        <button id="renewbutton">Renew</button>
     </aside>
     <br />
+
 </article>
 
-<section>
-    {% for bus in bus_info %}
-    <aside onclick="location.href='{% url 'alias' bus.pk %}'">
-        <section>
-            <table style="overflow-x:hidden;">
-                <thead>
-                    <tr>
-                        <th style="padding-right:0">{{ bus.bus_name }}</th>
-                        {% if bus.stop_info.0.vehicle_no %}
-                            <td>{{ bus.stop_info.0.vehicle_no }}</td>
-                        {% elif bus.only_departure %}
-                            <td>기점</td>
-                        {% else %}
-                            <td>...</td>
-                        {% endif %}
-                    </tr>
-                </thead>
-    
-                {% for info in bus.stop_info %}
-                    {% if info.remain_time %}
-                    <tr>
-                        <td>&#x1f68c; {{ info.remain_time }} ({{ info.stop_name }})</td>
-                    </tr>
-                    {% endif %}
-    
-                    {% if info.bus_time %}
-                    <tr>
-                        <td>&#128338; {{ info.bus_time }} 출발예정 </td>
-                        {% if info.only_departure %}
-                        <td>기점</td>
-                        {% endif %}
-                    </tr>
-                    {% endif %}
-                    {% if info.no_data %}
-                    <tr>
-                        <td> 더이상 버스가 없습니다. </td>
-                    </tr>
-                    {% endif %}
-                {% endfor%}
-    
-            </table>
-        </section>
-    </aside>
-    {% endfor %}
+<section id="sectionRoot">
 </section>
+
+<script>
+processApiBusno("{% url 'apibusno' %}", "/alias/");
+renewbutton.onclick = () => processApiBusno("{% url 'apibusno' %}", "/alias/");
+</script>
 
 {% endblock content %}

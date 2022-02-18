@@ -79,7 +79,7 @@ def get_all_positions():
                 ON pol.last_node_key_id=lnol.id
             ) AS polex
             INNER JOIN chroniccrawler_posofbus AS pob
-            ON polex.lid=pob.route_key_id AND polex.fn <= pob.node_order AND polex.ln >= pob.node_order
+            ON polex.lid=pob.route_key_id AND polex.fn <= pob.node_order AND polex.ln > pob.node_order
             INNER JOIN chroniccrawler_nodeoflane AS nol
             ON pob.route_key_id=nol.route_key_id AND pob.node_id=nol.node_id
         ) AS pos
@@ -102,7 +102,7 @@ def get_all_departures():
     hour = now.hour
     minute = now.minute
 
-    four = str(1930)#now.strftime("%H%M")
+    four = now.strftime("%H%M")
 
     timetables = UlsanBus_TimeTable.objects.raw("""
         SELECT *, dep.aid AS aid, dep.lid AS lid
