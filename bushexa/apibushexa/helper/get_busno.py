@@ -6,6 +6,10 @@ from chroniccrawler.models import *
 BUSNO_HOW_MUCH_ENTRY_PER_LANE = 2
 
 
+def get_bus_stop_name():
+    return "울산과학기술원"
+
+
 def get_all_alias():
     alias = LaneAlias.objects.raw("""
         SELECT *, map.lane_key_id AS lane_key, nol.node_order AS first_node_order, nol2.node_order AS last_node_order,
@@ -139,6 +143,7 @@ def get_all_departures():
 def build_response_dict():
 
     rd ={
+            "stopname": get_bus_stop_name(),
             "alias": get_all_alias(),
             "arrival": get_all_arrivals(),
             "position": get_all_positions(),

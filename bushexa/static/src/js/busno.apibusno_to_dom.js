@@ -97,6 +97,9 @@ async function processApiBusno(urlToBusno, baseUrlToAlias) {
     let dep = data.departure;
     let pos = data.position;
 
+    let stopName = document.querySelector("#stopName");
+    stopName.innerHTML = "정류소명: " + data.stopname;
+
     let sectionRoot = document.querySelector("#sectionRoot");
     while(sectionRoot.firstChild) {sectionRoot.firstChild.remove();}
 
