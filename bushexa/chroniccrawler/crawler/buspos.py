@@ -18,10 +18,10 @@ def ready_request(lanes):
     serviceKey = get_key()
     numOfRows = '64'
     pageNo = '1'
-    url = 'http://openapi.tago.go.kr/openapi/service/BusLcInfoInqireService/getRouteAcctoBusLcList'
+    url = 'http://apis.data.go.kr/1613000/BusLcInfoInqireService/getRouteAcctoBusLcList'
     for lane in lanes:
         params = {'serviceKey': serviceKey, 'numOfRows': numOfRows, 'pageNo': pageNo,
-                  'cityCode': lane.city_code, 'routeId': lane.route_id}
+                  '_type': 'xml', 'cityCode': lane.city_code, 'routeId': lane.route_id}
 
         lane_url_params.append((lane, url, params))
 
