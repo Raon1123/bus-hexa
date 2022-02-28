@@ -156,9 +156,9 @@ virtualenv 사용 시에는 밑의 예시처럼 등록하면 정상적으로 작
 
 ChronicCrawler는 공공 데이터포털에 공개된 아래 오픈API들을 기반으로 하고 있습니다.
 
-[국토교통부_버스노선정보](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000758)
+[국토교통부_(TAGO)_버스노선정보](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15098529)
 
-[국토교통부_버스위치정보](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15000515)
+[국토교통부_(TAGO)_버스위치정보](https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15098533)
 
 API Key를 `(앱 위치)/crawler/key.txt`에 저장하세요.
 
