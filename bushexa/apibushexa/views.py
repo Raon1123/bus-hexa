@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 
 from chroniccrawler.models import *
-from .helper import get_busno, get_onelane
+from .helper import get_busno, get_onelane, get_lanes
 
 
 def api_get_busno(request):
@@ -12,3 +12,7 @@ def api_get_busno(request):
 def api_get_onelane(request, db_lane_id):
     lane = get_object_or_404(LaneToTrack, pk=db_lane_id)
     return JsonResponse(get_onelane.build_response_dict(lane))
+
+
+def api_get_lanes(request):
+    return JsonResponse(get_lanes.build_response_dict())
