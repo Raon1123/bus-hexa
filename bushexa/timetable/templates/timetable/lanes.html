@@ -2,18 +2,16 @@
 {% load static %}
 
 {% block head %}
+<script id="apibusno_lanes" src="{% static 'src/js/lanes.apibusno_to_dom.js' %}"></script>
 {% endblock head %}
 
 {% block title %}Bus HeXA{% endblock title %}
 
 {% block content %}
-<section>
-    {% for num, lanes in lane_groups.items %}
-        <aside>
-            {% for lane in lanes %}
-            <p onclick="location.href='{% url 'indlane' lane.id %}'">{{ lane.bus_name }}</p>
-            {% endfor %}
-        </aside>
-    {% endfor %}
+<section id="sectionRoot">
 </section>
+
+<script>
+getApiLanes("{% url 'apilanes' %}", "/lane/");
+</script>
 {% endblock content %}

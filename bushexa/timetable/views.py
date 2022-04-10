@@ -90,19 +90,6 @@ class AllLanesView(TemplateView):
     
     template_name = "timetable/lanes.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        ldict = {}
-        lanes = LaneToTrack.objects.all()
-        for l in lanes:
-            k = l.bus_name.split('(')[0]
-            if ldict.get(k):
-                ldict.get(k).append(l)
-            else:
-                ldict[k] = [l]
-        context.update({'lane_groups':ldict})
-        return context
-        
 
 @method_decorator(track_hourly_load, name='dispatch')
 class IndividualLaneView(DetailView, TemplateResponseMixin):
