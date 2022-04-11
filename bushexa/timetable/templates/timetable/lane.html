@@ -16,6 +16,7 @@ function ttshowhide() {
     }
 }
 </script>
+<script id="apibushexa_lane" src="{% static 'src/js/lane.apibushexa_to_dom.js' %}"></script>
 {% endblock head %}
 
 {% block title %}Bus HeXA{% endblock title %}
@@ -25,12 +26,12 @@ function ttshowhide() {
 
 <article>
     <aside>
-        <p>노선명: {{ lane.bus_name }}</p>
+        <p id="lane_name_p">Placeholder</p>
     </aside>
 </article>
 <section>
     <aside>
-        <p>주요역: {{ landmarks }}</p>
+        <p id="landmark_nodes_p">Placeholder</p>
     </aside>
 </section>
 <section>
@@ -40,11 +41,8 @@ function ttshowhide() {
                 <th>시간표</th>
             </tr>
         </thead>
-        {% for tt in timetables %}
-            <tr>
-                <td class="tt" style="display:none">{{ tt.hour }}:{{ tt.minute }}</td>
-            </tr>
-        {% endfor %}
+        <tr id="timetables_tr">
+        </tr>
     </table>
 </section>
 <section>
@@ -70,5 +68,7 @@ function ttshowhide() {
     </table>
 </section>
 
-
+<script>
+getApiLane("{% url 'apionelane' db_lane_id=lane.id %}");
+</script>
 {% endblock content %}
