@@ -29,12 +29,23 @@ def get_timetables(lane):
     return ttsdict
 
 
+def get_positions(lane):
+    poss = PosOfBus.objects.filter(route_key=lane).order_by('node_order')
+
+    posslist = [{"node_order": p.node_order,
+                 "bus_num": p.bus_num,
+                 "node_id": p.node_id,} for p in poss]
+
+    return posslist
+
+
 def build_response_dict(lane):
     rd = {
         "lanename": get_lanename(lane),
         "landmarknodes": get_landmarknodes(lane),
         "nodes": get_nodes(lane),
         "timetables": get_timetables(lane),
+        "positions": get_positions(lane),
     }
 
     return rd
