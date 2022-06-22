@@ -56,6 +56,11 @@ class BusNumberBasedBusListView(TemplateView, BusInfoMixin):
 
     template_name = "timetable/busno.html"
 
+    def dispatch(self, *args, **kwargs):
+        response = super(BusNumberBasedBusListView, self).dispatch(*args, **kwargs)
+        response['Cache-Control'] = "no-cache"
+        return response
+
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context.update(self.get_businfo_context())
