@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_filters',
     'analytics.apps.AnalyticsConfig',
     'timetable.apps.TimetableConfig',
     'chroniccrawler.apps.ChroniccrawlerConfig',
@@ -98,6 +100,12 @@ DATABASES = {
     }
 }
 
+# Django rest framework
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
+
+
 # SQLite3 database for development
 
 # DATABASES = {
@@ -139,7 +147,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
