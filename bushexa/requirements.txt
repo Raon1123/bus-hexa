@@ -7,7 +7,7 @@ attrs==23.1.0
 backports.zoneinfo==0.2.1
 beautifulsoup4==4.12.2
 cchardet==2.1.7
-certifi==2023.7.22
+certifi==2024.7.4
 cffi==1.16.0
 chardet==5.2.0
 charset-normalizer==3.2.0
